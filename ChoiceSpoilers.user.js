@@ -10,6 +10,7 @@
 // @author		   Tard
 // @author         Hellion
 // @author         Aelsa
+// @require http://userscripts.org/scripts/source/57756.user.js
 // @include        *kingdomofloathing.com/choice.php
 // @include        *kingdomofloathing.com/basement.php
 // @include	       *kingdomofloathing.com/friars.php*
@@ -18,6 +19,7 @@
 // @include        *kingdomofloathing.com/palinshelves.php
 // @include        *kingdomofloathing.com/clan_viplounge.php*
 // @include		   *kingdomofloathing.com/clan_rumpus.php*
+// @include			*kingdomofloathing.com/game.php
 // @include        *127.0.0.1:*/clan_viplounge.php*
 // @include		   *127.0.0.1:*/clan_rumpus.php*
 // @include        *127.0.0.1:*/main_c.html
@@ -28,6 +30,7 @@
 // @include	       *127.0.0.1:*/bigisland.php*
 // @include	       *127.0.0.1:*/postwarisland.php*
 // @include        *127.0.0.1:*/palinshelves.php
+// @include			*127.0.0.1:*/game.php
 // @include        *localhost:*/clan_viplounge.php*
 // @include		   *localhost:*/clan_rumpus.php*
 // @include        *localhost:*/main_c.html
@@ -38,7 +41,9 @@
 // @include	       *localhost:*/bigisland.php*
 // @include	       *localhost:*/postwarisland.php*
 // @include        *localhost:*/palinshelves.php
+// @include			*localhost:*/game.php
 // @description    Version 3.02
+// @history			3.02 added all antique maps through August 2010, and new Spooky Forest choice.
 // ==/UserScript==
 
 // version history:
@@ -54,6 +59,9 @@
 //		Neckback crick map
 //		new spooky forest choice
 
+if (window.location.pathname == "game.php") {	// just logged in, do certain stuff exactly once.
+	ScriptUpdater.check(68727,"3.0");
+}
 if (window.name == "mainpane") {
 //	var place = location.pathname.replace(/\/|\.(php|html)$/gi, "").toLowerCase();
 
