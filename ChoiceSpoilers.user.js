@@ -1,5 +1,6 @@
 // Tard's KoL Scripts
 // Copyright (c) 2006, Byung Kim
+// New releases Copyright (c) 2009, 2010 by Hellion
 // Released under the GPL license
 // http://www.gnu.org/copyleft/gpl.html
 //
@@ -37,7 +38,7 @@
 // @include	       *localhost:*/bigisland.php*
 // @include	       *localhost:*/postwarisland.php*
 // @include        *localhost:*/palinshelves.php
-// @description    Version 3.01
+// @description    Version 3.02
 // ==/UserScript==
 
 // version history:
@@ -47,6 +48,11 @@
 //		new "Enormous > sign" choice
 //		reflection of a map choices
 //		add 3rd choice to "O Cap'm, My Cap'm" in the FCle when nemesis quest secret volcano island lair map is available
+// 3.02 add:
+// 		Dr. Jacking's map
+//		Kegger in the Woods map
+//		Neckback crick map
+//		new spooky forest choice
 
 if (window.name == "mainpane") {
 //	var place = location.pathname.replace(/\/|\.(php|html)$/gi, "").toLowerCase();
