@@ -6,7 +6,7 @@
 //
 // ==UserScript==
 // @name           Tard's Kol Scripts - Choice Adventure Rewards
-// @version        3.04
+// @version        3.05
 // @namespace      http://kol.dashida.com
 // @author		   Tard
 // @author         Hellion
@@ -38,6 +38,7 @@
 // @include	   *localhost:*/bigisland.php*
 // @include	   *localhost:*/postwarisland.php*
 // @include    *localhost:*/palinshelves.php
+// @history 3.05 added safety maps
 // @history 3.04 added autoupdater
 // @history 3.03 added all choices through new knob
 // @history 3.02 added all antique maps through August 2010, and new Spooky Forest choice.
@@ -47,15 +48,16 @@
 
 
 if (window.location.pathname == "/main.php") {	// just logged in, do certain stuff once.
-	autoUpdate(68727,"3.04");
+	autoUpdate(68727,"3.05");
 }
 if (window.name == "mainpane") {
 //	var place = location.pathname.replace(/\/|\.(php|html)$/gi, "").toLowerCase();
 
 	if (window.location.pathname == "/choice.php") {	// for regular choices, we use the standardized whichchoice value.
 		// format, if it wasn't already painfully obvious:
-		// whichchoiceID:["adventure name","choice 1 hints","choice 2 hints","choice 3 hints","choice 4 hints"]
-		// n.b. the "adventure name" value is optional for these choices.
+		// whichchoiceID:["ID text (usually the adventure name)","choice 1 hints","choice 2 hints","choice 3 hints","choice 4 hints"]
+		// n.b. the "ID text" value is superfluous for these choices, as we are using the adventure number to select the appropriate entry.
+		// The IDs are left over from a previous version where they were required, and remain as documentation.
 		var advOptions = {
 		// The Dungeons of Doom
 		3:["The Oracle Will See You Now","nothing","nothing","enable reading of plus sign"],
@@ -107,7 +109,7 @@ if (window.name == "mainpane") {
 		504:["Tree's Last Stand","\nSell 1 skin","\nSell all skins","\nacquire Spooky Sapling","nothing"],
 		505:["Consciousness of a Stream","\nMosquito larva (first time after quest) OR 3 spooky mushrooms","\n300 meat and tree-holed coin (first time) OR nothing","Proceed to choice of Mox/Mus/Fight a Vampire"],
 		506:["Through Thicket and Thinnet","\nProceed to choice of class starting items","\nAcquire spooky-gro fertilizer","\nProceed to choice of Spooky Temple Map/nothing/nothing"],
-		507:["O Olith, Mon","acquire Spooky Temple Map","nothing (no turn loss)","nothing (no turn loss)"],
+		507:["O Lith, Mon","acquire Spooky Temple Map","nothing (no turn loss)","nothing (no turn loss)"],
 		
 		//48-71 are the Violet Fog; can't really label those.
 		
@@ -475,12 +477,10 @@ if (window.name == "mainpane") {
 					thisopt = advOptions[choicenumber];
 				} else if (inputs[n].name=="option") {							// identify button!
 					cval = inputs[n].value;
-				} else if (choicenumber == 535) {
-					GM_log("calling do_535map");
-					do_535map();
-					map = 535;
+				} else if (choicenumber == 535) {		// The Ronald and Grimace map adventures use a single choice number
+					do_535map(); 						// to encode their entire maze, the bastards.  So we have to handle
+					map = 535;							// them specially.
 				} else if (choicenumber == 536) {
-					GM_log("calling do_536map");
 					do_536map();
 					map = 536;
 				} else if (choicenumber != 0 && inputs[n].type == "submit") {	// modify button!
@@ -505,6 +505,7 @@ if (window.name == "mainpane") {
 			}
 		}
 	} else {	// for other stuff, we brute-force a string search since the buff areas aren't standardized.
+				// in this section, the "ID Text" field is required.
 		// Buff areas
 		var otherOptions = {
 			// The Friars
@@ -545,15 +546,14 @@ if (window.name == "mainpane") {
 
 function do_535map() {
 	if (map == 535) {
-		GM_log("already mapped this.");
+//		GM_log("already mapped this.");
 		return;
 	}
-	var otherOptions = {
-//		"imagefilename.gif":["alternate ID text","choice1","choice2","choiceN"],
-		"rs_3doors.gif":["Anyway, somebody went through a lot","to Pool","To Headcrab (Effect or EMU rocket thrusters)","to Keycard"],
+	var otherOptions = {	// ID text optional here because we use the image name to ID the adventure
+		"rs_3doors.gif":["Anyway, somebody went through a lot","to Pool (toward EMU parts or +mys buff or elfpacks)","To Armory (toward EMU joystick/elfpacks or +mus/mox buffs)","to Mess (toward effects or EMU rocket)"],
 		"rs_junction.gif":["A blond-haired disembodied head","to EMU joystick","to elven packs","back to Lobby"],
 		"elf_headcrab.gif":["vast bank of television screens","to EMU rocket thrusters","effect: +5 myst substat/fight"],
-		"elf_scientist.gif":["could sure use those thrusters","EMU rocket thrusters"],
+		"elfscientist.gif":["could sure use those thrusters","EMU rocket thrusters"],
 		"elfdonfreeman.gif":["There are two joysticks on it","EMU joystick"],
 		"rs_portal.gif":["through into the shaft","medi-pack and magi-pack"],
 		"surv_overarmed.gif":["down the hallway to the armory","to Lobby","to Keycard","to Romance (choice of buffs)"],
@@ -561,6 +561,7 @@ function do_535map() {
 		"surv_unlikely.gif":["You follow the signs to the Mess","to Lobby","to Romance (choice of buffs)","to Headcrab (effect or EMU rocket thrusters)"],
 		"rs_door.gif":["You follow the map to the secret bunker","to Lobby"],
 		"elfordbrimley.gif":["doesn't look swimmable","to Lobby","to Headcrab (Effect or EMU rocket thrusters)","to Keycard"],
+
 	};
 	GM_log("in do_535map");
 	var imgfile = document.getElementsByTagName('img')[0].src.split('/')[4];
@@ -577,27 +578,27 @@ function do_535map() {
 
 function do_536map() {
 	if (map == 536) {
-		GM_log("already mapped this.");
+//		GM_log("already mapped this.");
 		return;
 	}
-	var otherOptions = {
-		"gs_hatch.gif":["","To Tavern"],
-		"gs_tavern.gif":["","To Bar","To Coatcheck","To Campsite"],
-		"gs_dark3doors.gif":["You gotta just lick the sky","To Tavern","To Sleeping Quarters","To Warehouse"],
-//		"gs_dark3doors.gif":["realize you had green skin","distention pill","synthetic dog hair pill","To Tavern"],
-		"gs_medbio.gif":["","Effect: Heal thy nanoself (regen 10-20 HP, 10 turns)","to EMU harness","to Tavern"],
-		"rs_portal.gif":["THE SONIC OSCILLATOR","EMU Harness"],
-//		"rs_portal.gif":["brief but intense itching sensation","2 elven hardtack+2 elven squeeze"],
-//		"rs_portal.gif":["little pink plastic one","EMU helmet"],
-		"gs_bellhops.gif":["","To Warehouse","To Hallway","To Tavern"],
-		"gs_3doors.gif":["","To food/drink","to EMU helmet","To Tavern"],
-		"gs_camp3doors.gif":["","To Sleeping Quarters","To Hallway","To Tavern"],
+	var otherOptions = { // ID text optional here because we use the image name
+		"gs_hatch.gif":["","To Tavern"], // entryway
+		"gs_tavern.gif":["","To Bar (toward food/drink pills)","To Coatcheck (toward EMU parts)","To Campsite (toward food/drink pills or elven supplies/EMU helmet)"], // tavern
+		"gs_dark3doors.gif":["","To Tavern","To Sleeping Quarters (food/drink pills)","To Warehouse (HP regen effect or EMU harness)"], // Bar
+//		"gs_dark3doors.gif":["","distention pill","synthetic dog hair pill","To Tavern"], // sleeping quarters
+		"gs_medbio.gif":["","Effect: Heal thy nanoself (regen 10-20 HP, 10 turns)","to EMU harness","to Tavern"], //Warehouse
+		"rs_portal.gif":["THE SONIC OSCILLATOR","EMU Harness"], //Harness Lab
+//		"rs_portal.gif":["","2 elven hardtack+2 elven squeeze"], //supplies lab
+//		"rs_portal.gif":["","EMU helmet"], 						// helmet lab
+		"gs_bellhops.gif":["","To Warehouse (HP regen effect or EMU harness)","To Hallway (elven supplies or EMU helmet)","To Tavern"], // coat check
+		"gs_3doors.gif":["","To elven supplies","to EMU helmet","To Tavern"], // Hallway
+		"gs_camp3doors.gif":["","To Sleeping Quarters (food/drink pills)","To Hallway (elven supplies or EMU helmet)","To Tavern"], // Campground
 	};
-	var darkdoors = {
-		0:["You walk behind the bar","To Tavern","To Sleeping Quarters","To Warehouse"],
-		1:["You step through the door","distention pill","synthetic dog hair pill","To Tavern"]
+	var darkdoors = { // ID text required here because the image name is not unique sometimes.  Bastards.
+		0:["You walk behind the bar","To Tavern","To Sleeping Quarters (food/drink pills)","To Warehouse (HP regen effect or EMU harness)"],
+		1:["You step through the door","distention pill (food)","synthetic dog hair pill (drink)","To Tavern"]
 	};
-	var portal = {
+	var portal = { // also required here.  bah.
 		0:["You walk through the door and into what appears to be some kind of laboratory","EMU Harness"],
 		1:["You open the door and walk into a dark room","2 elven hardtack+2 elven squeeze"],
 		2:["You step from the clean, bright hallway","EMU helmet"]
@@ -610,20 +611,22 @@ function do_536map() {
 	var thisopt = otherOptions[imgfile];
 	var q = 0;
 	if (imgfile == "gs_dark3doors.gif") {
-		var advtext = document.body.textContent();
+		var advtext = document.getElementsByTagName('body')[0].textContent;
 		while (q < 2) {
 			if (advtext.indexOf(darkdoors[q][0]) != -1) break;
 			q++;
 		}
 		thisopt = darkdoors[q];
+//		GM_log("q="+q+",content="+advtext);
 	}
 	else if (imgfile == "rs_portal.gif") {
-		var advtext = document.body.textContent();
-		while (q < 2) {
+		var advtext = document.getElementsByTagName('body')[0].textContent;
+		while (q < 3) {
 			if (advtext.indexOf(portal[q][0]) != -1) break;
 			q++;
 		}
 		thisopt = portal[q];	
+//		GM_log("q="+q+",content="+advtext);
 	}
 	if (inputs.length && thisopt) {
 		for (var n=0; n<inputs.length; n++) {
