@@ -6,7 +6,7 @@
 //
 // ==UserScript==
 // @name           Tard's Kol Scripts - Choice Adventure Rewards
-// @version        3.05
+// @version        3.06
 // @namespace      http://kol.dashida.com
 // @author		   Tard
 // @author         Hellion
@@ -38,6 +38,7 @@
 // @include	   *localhost:*/bigisland.php*
 // @include	   *localhost:*/postwarisland.php*
 // @include    *localhost:*/palinshelves.php
+// @history 3.06 added Haunted Sorority house
 // @history 3.05 added safety maps
 // @history 3.04 added autoupdater
 // @history 3.03 added all choices through new knob
@@ -462,6 +463,43 @@ if (window.name == "mainpane") {
 		//Neckback Crick
 		497:["SHAFT!","Fight unearthed monstrosity","nothing"],
 		
+		// vamp out
+		546:["Interview with You","","","","nothing (no turn loss)"],
+		
+		// haunted sorority house
+		548:["Necbromancer","monster: Necbromancer","nothing (no adventure loss)"],
+		549:["Dark in the attic",
+				"\n3 haunted house sorority staff guides (first time only)\notherwise no turn loss",
+				"\nGhost trap",
+				"\nIncrease ML",
+				"\nDecrease ML",
+				"\nWith silver shotgun shell: clear many werewolves\nwithout: nothing"],
+		550:["The Unliving room",
+				"\nIncrease ML",
+				"\nDecrease ML",
+				"\nWith chainsaw chain:clear many zombies\nwithout: nothing",
+				"\nWith funhouse mirror:clear many skeletons\nwithout: nothing",
+				"\nitem of haunted sorority makeup"],
+		551:["Debasement",
+				"\nProceed to choice of chainsaw chain/silver shotgun shell/funhouse mirror",
+				"\nWith plastic vampire fangs:clear many vampires (one time only)\nwithout:nothing",
+				"\nIncrease ML",
+				"\nDecrease ML"],
+		552:["Prop Deportment",
+				"Chainsaw chain",
+				"Proceed to Reloading Bench (silver shotgun shell)",
+				"Funhouse mirror"],
+		553:["Relocked and reloaded",
+				"Silver shotgun shell",
+				"Silver shotgun shell",
+				"Silver shotgun shell",		
+				"Silver shotgun shell",
+				"Silver shotgun shell",
+				"Nothing"],
+		554:["Behind the spooky curtain",
+				"\nProceed to choice of staff guides/ghost trap/ML/werewolf-slaying",
+				"\nProceed to choice of ML/zombie-slaying/skeleton-slaying/random make-up item",
+				"\nProceed to choice of (chainsaw chain/shotgun shell/funhouse mirror)/vampire-slaying/ML"],
 
 		};
 		
