@@ -49,7 +49,7 @@
 
 
 if (window.location.pathname == "/main.php") {	// just logged in, do certain stuff once.
-	autoUpdate(68727,"3.05");
+	autoUpdate(68727,"3.06");
 }
 if (window.name == "mainpane") {
 //	var place = location.pathname.replace(/\/|\.(php|html)$/gi, "").toLowerCase();
@@ -500,6 +500,23 @@ if (window.name == "mainpane") {
 				"\nProceed to choice of staff guides/ghost trap/ML/werewolf-slaying",
 				"\nProceed to choice of ML/zombie-slaying/skeleton-slaying/random make-up item",
 				"\nProceed to choice of (chainsaw chain/shotgun shell/funhouse mirror)/vampire-slaying/ML"],
+			
+		// New hidden temple!
+		581:["Such Great Depths","acquire glowing fungus","effect: Hidden Power (+15 all stats)","fight clan of cave bars"],
+		582:["Fitting In","\nProceed to choice of Mys gain/Hidden City Unlock item/buff extension + 3 turns",
+				"\nProceed to Hidden Heart of the Hidden Temple",
+				"\nProceed to choice of (glowing fungus/buff/fight clan of cave bars)"],
+		579:["Such Great Heights",
+				"\n+(some) Mys","acquire The Nostril of the Serpent","+3 Adv, +3 turns of effects"],
+		580:["Hidden Heart (pikachu)",
+				"unlock hidden city",
+				"\nwith Nostril of the Serpent: Unconfusing buttons\nwithout: Confusing buttons",
+				"+(some) Moxie, effect: somewhat poisoned"],
+		584:["Unconfusing Buttons",
+				"set Hidden Heart adv to Stone (mus/buttons/moxie",
+				"set Hidden Heart adv to sun (calendar fragment/buttons/moxie",
+				"set hidden heart adv to gargoyle (+MP/buttons/moxie",
+				"set hidden heart adv to Pikachulotl (hidden city unlock/buttons/moxie"],
 
 		};
 		
@@ -521,6 +538,9 @@ if (window.name == "mainpane") {
 				} else if (choicenumber == 536) {
 					do_536map();
 					map = 536;
+				} else if (choicenumber == 580) {		// the hidden temple does the same damn thing.  why why why, CDM. bleah.
+					do_580map();
+					map = 580;
 				} else if (choicenumber != 0 && inputs[n].type == "submit") {	// modify button!
 					inputs[n].value += " -- " + thisopt[cval] + "";
 				}
@@ -578,6 +598,30 @@ if (window.name == "mainpane") {
 				}
 				break;
 			}
+		}
+	}
+}
+
+function do_580map() {
+	if (map == 580) {
+		GM_log("already mapped this.");
+		return;
+	}
+	var otherOptions = {
+		"Door_stone.gif":["+100 (?) Mus","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
+		"Door_sun.gif":["ancient calendar fragment","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
+		"Door_gargoyle.gif":["+(some) MP","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
+		"Door_pikachu.gif":["\nto Hidden City unlock (must have 3 turns left)","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"]
+	};
+	GM_log("in do_580map");
+	var imgfile = document.getElementsByTagName('img')[0].src.split('/')[4];
+	GM_log("imgfile="+imgfile);
+	var inputs = document.getElementsByTagName('input');
+	var choicenumber = 1;
+	var thisopt = otherOptions[imgfile];
+	if (inputs.length && thisopt) {
+		for (var n=0; n<inputs.length; n++) {
+			if (inputs[n] && inputs[n].type == "submit") inputs[n].value += " -- " + thisopt[choicenumber++];
 		}
 	}
 }
