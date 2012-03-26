@@ -504,14 +504,14 @@ if (window.name == "mainpane") {
 		// New hidden temple!
 		581:["Such Great Depths","acquire glowing fungus","effect: Hidden Power (+15 all stats)","fight clan of cave bars"],
 		582:["Fitting In","\nProceed to choice of Mys gain/Hidden City Unlock item/buff extension + 3 turns",
-				"\nProceed to Hidden Heart of the Hidden Temple",
+				"\nProceed to Hidden Heart of the Hidden Temple\n(Hidden City unlock path)",
 				"\nProceed to choice of (glowing fungus/buff/fight clan of cave bars)"],
 		579:["Such Great Heights",
-				"\n+(some) Mys","acquire The Nostril of the Serpent","+3 Adv, +3 turns of effects"],
-		580:["Hidden Heart (pikachu)",
-				"unlock hidden city",
-				"\nwith Nostril of the Serpent: Unconfusing buttons\nwithout: Confusing buttons",
-				"+(some) Moxie, effect: somewhat poisoned"],
+				"\n+(some) Mys","acquire The Nostril of the Serpent\n(first time only)","+3 Adv, +3 turns of effects (first time only)"],
+//		580:["Hidden Heart (pikachu)",
+//				"unlock hidden city",
+//				"\nwith Nostril of the Serpent: Unconfusing buttons\nwithout: Confusing buttons",
+//				"+(some) Moxie, effect: somewhat poisoned"],
 		584:["Unconfusing Buttons",
 				"set Hidden Heart adv to Stone (mus/buttons/moxie",
 				"set Hidden Heart adv to sun (calendar fragment/buttons/moxie",
@@ -608,20 +608,24 @@ function do_580map() {
 		return;
 	}
 	var otherOptions = {
-		"Door_stone.gif":["+100 (?) Mus","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
-		"Door_sun.gif":["ancient calendar fragment","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
-		"Door_gargoyle.gif":["+(some) MP","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
-		"Door_pikachu.gif":["\nto Hidden City unlock (must have 3 turns left)","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"]
+		"door_stone.gif":["","+100 (?) Mus","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
+		"door_sun.gif":["","ancient calendar fragment","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
+		"door_gargoyle.gif":["","+(some) MP","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
+		"door_pikachu.gif":["","\nto Hidden City unlock (must have 3 turns left)","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"]
 	};
 	GM_log("in do_580map");
 	var imgfile = document.getElementsByTagName('img')[0].src.split('/')[4];
+	if (imgfile == "stonewool.gif") imgfile = document.getElementsByTagName('img')[1].src.split('/')[4];
 	GM_log("imgfile="+imgfile);
 	var inputs = document.getElementsByTagName('input');
 	var choicenumber = 1;
 	var thisopt = otherOptions[imgfile];
 	if (inputs.length && thisopt) {
 		for (var n=0; n<inputs.length; n++) {
-			if (inputs[n] && inputs[n].type == "submit") inputs[n].value += " -- " + thisopt[choicenumber++];
+			if (inputs[n] && inputs[n].type == "submit") {
+				inputs[n].value += " -- " + thisopt[choicenumber++];
+				GM_log("setting option " + n + " to " + thisopt[choicenumber]);
+			}
 		}
 	}
 }
