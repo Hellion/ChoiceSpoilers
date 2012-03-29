@@ -6,7 +6,7 @@
 //
 // ==UserScript==
 // @name           Tard's Kol Scripts - Choice Adventure Rewards
-// @version        3.06
+// @version        3.07
 // @namespace      http://kol.dashida.com
 // @author		   Tard
 // @author         Hellion
@@ -38,6 +38,7 @@
 // @include	   *localhost:*/bigisland.php*
 // @include	   *localhost:*/postwarisland.php*
 // @include    *localhost:*/palinshelves.php
+// @history 3.07 added Kloop, new spooky temple
 // @history 3.06 added Haunted Sorority house
 // @history 3.05 added safety maps
 // @history 3.04 added autoupdater
@@ -500,6 +501,17 @@ if (window.name == "mainpane") {
 				"\nProceed to choice of staff guides/ghost trap/ML/werewolf-slaying",
 				"\nProceed to choice of ML/zombie-slaying/skeleton-slaying/random make-up item",
 				"\nProceed to choice of (chainsaw chain/shotgun shell/funhouse mirror)/vampire-slaying/ML"],
+		
+		// Kloop:
+		560:["Foreshadowing Demon!","\nEnables choice of Thorax/Bat-in-Spats adventure","nothing (no adv loss)"],
+		561:["You must choose your destruction!","\nEnable fight with Thorax","\nEnable fight with Bat-in-Spats"],
+		563:["A test of your mettle","\nFight either Thorax or Bat-in-Spats","\nnothing (no adv loss)"],
+		564:["A maelstrom of trouble","\nEnable option to fight boss demons (Pinch or Thugs)","\nnothing (no adv loss)"],
+		565:["To get groped or get mugged?","\nFight The Terrible Pinch","\nFight Thug 1 and Thug 2"],
+		566:["A choice to be made","\nFight either Pinch or Thugs 1 and 2","\nnothing (no adv loss)"],
+		567:["You may be on thin ice","\nenable option to fight boss demons (Mammon or Snitch)","nothing (no adv loss)"],
+		568:["Some Sounds Most Unnerving","\nfight Mammon the Elephant","\nFight The Large-Bellied Snitch"],
+		569:["One More demon to slay","\nFight either Mammon or Snitch","\nnothing (no turn loss)"],
 			
 		// New hidden temple!
 		581:["Such Great Depths","acquire glowing fungus","effect: Hidden Power (+15 all stats)","fight clan of cave bars"],
