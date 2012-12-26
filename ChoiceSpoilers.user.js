@@ -3,14 +3,16 @@
 // New releases Copyright (c) 2009-2013 by Hellion
 // Released under the GPL license
 // http://www.gnu.org/copyleft/gpl.html
+// autoUpdater used under Creative Commons License 3.0.
 //
 // ==UserScript==
 // @name           Tard's Kol Scripts - Choice Adventure Rewards
-// @version        3.09
+// @version        3.10
 // @namespace      http://kol.dashida.com
 // @author		   Tard
 // @author         Hellion
 // @author         Aelsa
+// @author	Buzzy (autoupdate function; see http://userscripts.org/scripts/show/52251 )
 // @include    *kingdomofloathing.com/choice.php*
 // @include    *kingdomofloathing.com/basement.php
 // @include	   *kingdomofloathing.com/friars.php*
@@ -38,6 +40,8 @@
 // @include	   *localhost:*/bigisland.php*
 // @include	   *localhost:*/postwarisland.php*
 // @include    *localhost:*/palinshelves.php
+// @grant	GM_log
+// @history 3.10 refactor the actual addition of spoiler text to eliminate code duplication.
 // @history 3.09 updated for new level-9 quest stuff, bugbears/zombies, skeleton usage, etc.
 // @history 3.08 updated include list for new choice URL standard, added clan VIP swimming pool
 // @history 3.07 added Kloop, new spooky temple
@@ -50,19 +54,75 @@
 // @history 3.00 major rewrite of detection logic.
 // ==/UserScript==
 
+var inputs = document.getElementsByTagName('input');
+var adventureChoiceNumber = 0, SpoilerSet, imageName;
+var n = 0, sp_list = "";
 
 if (window.location.pathname == "/main.php") {	// just logged in, do certain stuff once.
-	autoUpdate(68727,"3.09");
+	autoUpdate(68727,"3.10");
 }
-if (window.name == "mainpane") {
-//	var place = location.pathname.replace(/\/|\.(php|html)$/gi, "").toLowerCase();
 
-	if (window.location.pathname == "/choice.php") {	// for regular choices, we use the standardized whichchoice value.
-		// format, if it wasn't already painfully obvious:
-		// whichchoiceID:["ID text (usually the adventure name)","choice 1 hints","choice 2 hints","choice 3 hints","choice 4 hints"]
-		// n.b. the "ID text" value is superfluous for these choices, as we are using the adventure number to select the appropriate entry.
-		// The IDs are left over from a previous version where they were required, and remain as documentation.
-		var advOptions = {
+if (window.name == "mainpane") {
+	if (inputs.length === 0) {return;}	//not in a place where we need to do anything.
+
+	//get the adventure choice number.  Could probably do this without the for-loop.
+	for (n=0; n < inputs.length; n++) {
+		if (inputs[n].name === "whichchoice") {
+			adventureChoiceNumber = inputs[n].value;
+			break;
+		}
+	}
+//	GM_log("found choice " + adventureChoiceNumber);
+	SpoilerSet = GetSpoilersForAdvNumber(adventureChoiceNumber);
+	if (SpoilerSet === undefined || SpoilerSet === null) { 
+		imageName = document.getElementsByTagName('img')[0].src.split('/')[4];
+		SpoilerSet = GetSpoilersForImageName(adventureChoiceNumber, imageName);
+		if (SpoilerSet === undefined || SpoilerSet === null) {
+			var bodyText = document.getElementsByTagName('body')[0].innerHTML; //textContent;
+			var URL = window.location.pathname; 
+			SpoilerSet = GetSpoilersForBodyText(adventureChoiceNumber, URL, imageName, bodyText);
+		}
+	 }
+	 if (SpoilerSet !== undefined && SpoilerSet !== null) { 
+		for (n in SpoilerSet) { sp_list = sp_list + "(" + n + ") " + SpoilerSet[n] + ";\n"; }
+//		GM_log("found spoiler:\n " + sp_list);
+		DisplaySpoilers(inputs, SpoilerSet);
+	}
+}
+return;
+
+//all choice.php buttons have an "option=" setting in their form definition;
+//usually a number from 1-6, which corresponds to our array of spoiler text strings.
+//this allows us to handle choices where some buttons go missing depending on your game circumstance.
+//Buff areas, on the other hand, have no such values and must simply be updated in order.
+function DisplaySpoilers(inputs, SpoilerSet) {
+	var cval = -1, n;
+//	GM_log("in DisplaySpoilers");
+	for (n=0; n<inputs.length;n++)	{
+		if (inputs[n].name==="option") {		// identify button!
+			cval = inputs[n].value;
+		} else if (inputs[n].type === "submit" && (cval > 0)) {	// modify button!
+			inputs[n].value += " -- " + SpoilerSet[cval] + "";
+//			GM_log("adding text "+SpoilerSet[cval]);
+		}
+	}
+	if (cval === -1) {			// got here without setting a button value? not a Choice.php button set.
+		cval = 1;			// just run through all submit text and put in our info in sequence.
+		for (n=0; n<inputs.length; n++) {
+			if (inputs[n].type === "submit") {
+//				GM_log("adding buff text " +SpoilerSet[cval]);
+				inputs[n].value += " -- " + SpoilerSet[cval++] + "";
+			}
+		}
+	}
+}
+
+function GetSpoilersForAdvNumber(advNumber) {
+	//data format: advOption[adventureNumber] = array of strings.
+	//array element 0 = dummy value, since buttons are numbered 1-N; 
+	//for historical reasons, many of these dummy values are the names of the adventures.
+	//elements 1-N are spoiler text for the respective buttons.
+	var advOptions = {
 		// The Dungeons of Doom
 		3:["The Oracle Will See You Now","nothing","nothing","enable reading of plus sign"],
 		25:["Ouch! You bump into a door","magic lamp","Monster: mimic","nothing (no adv loss)"],
@@ -446,7 +506,7 @@ if (window.name == "mainpane") {
 													  "\nif fruit in machine: 3 fruit\notherwise nothing"],
 		453:["Getting a leg up","Monster: jungle scabie","gain 30-40 mus, mys, and mox","acquire hair of the calf"],
 		454:["Just Like the Ocean Under the Moon","Monster: smooth jazz scabie","gain 90-100 HP and 90-100 MP"],
-		455:["Double Trouble in the Stubble","gain 50-60 mus, mys, and mox","\mwith can-you-dig-it:acquire legendary beat\nwithout: lose (lots of) HP"],
+		455:["Double Trouble in the Stubble","gain 50-60 mus, mys, and mox","\nwith can-you-dig-it:acquire legendary beat\nwithout: lose (lots of) HP"],
 		456:["Made it, Ma!  Top of the world!","Monster: The Whole Kingdom","effect: Hurricane Force","acquire a dance upon the palate (first time only)","gain 31-40 mus, mys, and mox"],
 		
 											
@@ -613,215 +673,257 @@ if (window.name == "mainpane") {
 			"\nnothing (no adv loss)"],
 
 		//lost key
-		594:["A Lost Room"],	//hm.  must check out further.
-	
-
-		};
-		
-		var inputs = document.getElementsByTagName('input');
-		var choicenumber = 0;
-		var cval = -1;
-		var thisopt;
-		var map = 0;
-		if (inputs) {
-			for (var n=0; n<inputs.length;n++)	{
-				if (inputs[n].name=="whichchoice" && choicenumber == 0) {		// identify adventure!
-					choicenumber = inputs[n].value;
-					thisopt = advOptions[choicenumber];
-				} else if (inputs[n].name=="option") {							// identify button!
-					cval = inputs[n].value;
-				} else if (choicenumber == 535) {		// The Ronald and Grimace map adventures use a single choice number
-					do_535map(); 						// to encode their entire maze, the bastards.  So we have to handle
-					map = 535;							// them specially.
-				} else if (choicenumber == 536) {
-					do_536map();
-					map = 536;
-				} else if (choicenumber == 580) {		// the hidden temple does the same damn thing.  why why why, CDM. bleah.
-					do_580map();
-					map = 580;
-				} else if (choicenumber != 0 && inputs[n].type == "submit") {	// modify button!
-					inputs[n].value += " -- " + thisopt[cval] + "";
-				}
-			}
-		}
-	} else 	if (window.location.pathname == "/basement.php") {	// for the basement, we use the image name to figure out the choice.
-		var basementOptions = {
-		"twojackets.gif":["twojackets","+(mainstat) Mox","+(mainstat) Mus"],
-		"twopills.gif":["twopills","+(mainstat) Mus","+(mainstat) Myst"],
-		"figurecard.gif":["figurecard","+(mainstat) Myst","+(mainstat) Mox"]
-		};
-		// pick off "filename.gif" from "http://images.kingdomofloathing.com/adventureimages/filename.gif"
-		var imgfile = document.getElementsByTagName('img')[0].src.split('/')[4];
-		var inputs = document.getElementsByTagName('input');
-		var choicenumber = 1;
-		var thisopt = basementOptions[imgfile];
-		if (inputs.length && thisopt) {
-			for (var n=0; n<inputs.length; n++) {
-				if (inputs[n] && inputs[n].type == "submit") inputs[n].value += " -- " + thisopt[choicenumber++];
-			}
-		}
-	} else {	// for other stuff, we brute-force a string search since the buff areas aren't standardized.
-				// in this section, the "ID Text" field is required.
-		// Buff areas
-		var otherOptions = {
-			// The Friars
-			0:["Brother Flying Burrito, the Deep Fat Friar","+30% food drops (20 adv)"],
-			1:["Brother Corsican, the Deep Fat Friar","+2 familiar experience per combat (20 adv)"],
-			2:["Brother Smothers, the Deep Fat Friar","+30% booze drops (20 adv)"],
-			// The Nuns
-			3:["Get Healed","+1,000 HP"],
-			4:["Get a Massage","+1,000 HP, +1,000 MP"],
-			// The Arena
-			5:["Party with the free spirits","+5 stats per combat (20 adv)","+~20% item drops (20 adv)","+5lb familiar weight (20 adv)"],
-			6:["Try to get into the music","+10% all stats (20 adv)","+40% meat drops (20 adv)","+50% initiative (20 adv)"],
-			// Clan VIP Pool Table
-			7:["You approach the pool table.","+5 lb familiar weight/+50% weapon damage (10 adv)","+10 MP/turn, +50% spell damage (10 adv)","+10% item drops, +50% initiative (10 adv)"],
-			// funky choice in the palindome--apparently the listboxes make this use its own palinshelves.php page instead of choice.php.
-			8:["Drawn Onward","\nwith photo of God, hard rock candy, ketchup hound and ostrich egg on the shelves: \nmeet Dr. Awkward and get beaten up \nwithout: nothing (no adv loss)","nothing (no adv loss)"],
-			// Rumpus Room: jukebox, ballpit, chips
-			9:["This jukebox has a staggering","+10% meat drops (10 turns)","+3 stats per combat (10 turns)","+10% item drops (10 turns)","+20% initiative (10 turns)"],
-			10:["There's a ball pit here with","+(balls/100)% to all stats (20 turns)"],
-			11:["Unfortunately for you, only the three least popular flavors","an item giving +30 Mox (10 turns)","an item giving +30 Mus (10 turns)","an item giving +30 Mysticality (10 turns)"],
-			// Clan VIP swimming pool
-			12:["You change into your swimsuit","\nGet into the pool","+30 init, +25 stench damage, +20 ML (50 turns)","\ndecreased chance of random PvP, +NC (50 turns)"],
-		};
-//		GM_log("checking for buff areas");
-		bodyHTML = document.getElementsByTagName('body')[0].innerHTML;
-		for (var i in otherOptions) {
-			if (bodyHTML.indexOf(otherOptions[i][0]) != -1) {
-				var inputs = document.getElementsByTagName('input');
-				n = 1;
-				for (var j=0;j<inputs.length;j++) {
-					if (inputs[j] && inputs[j].type == "submit") {
-						inputs[j].value += " -- " + otherOptions[i][n++];
-					}
-				}
-				break;
-			}
-		}
-	}
+		594:["A Lost Room"]	//hm.  must check out further.
+	};
+//	GM_log("in GetSpoilersForAdvNumber");
+	if (advOptions[advNumber] !== undefined) { return advOptions[advNumber]; }
+	else { return null; }
 }
 
-function do_580map() {
-	if (map == 580) {
-		GM_log("already mapped this.");
-		return;
-	}
-	var otherOptions = {
-		"door_stone.gif":["","+100 (?) Mus","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
-		"door_sun.gif":["","ancient calendar fragment","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
-		"door_gargoyle.gif":["","+(some) MP","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"],
-		"door_pikachu.gif":["","\nto Hidden City unlock (must have 3 turns left)","\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons","+(some) Moxie, effect: somewhat poisoned"]
+function GetSpoilersForImageName(advNumber, imageName) {
+	//data format: advOptions[adventureNumber][imageName] = array of strings.
+	//array element 0 = optional ID text; 1-n = spoiler text.
+	var advOptions = {
+		580:{
+			"door_stone.gif":["",
+				"+100 (?) Mus",
+				"\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons",
+				"+(some) Moxie, effect: somewhat poisoned"],
+			"door_sun.gif":["",
+				"ancient calendar fragment",
+				"\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons",
+				"+(some) Moxie, effect: somewhat poisoned"],
+			"door_gargoyle.gif":["",
+				"+(some) MP",
+				"\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons",
+				"+(some) Moxie, effect: somewhat poisoned"],
+			"door_pikachu.gif":["",
+				"\nto Hidden City unlock (must have 3 turns left)",
+				"\nwith Nostril of the Serpent: choose door setting\nwithout: Confusing Buttons",
+				"+(some) Moxie, effect: somewhat poisoned"]
+		},
+		535:{ 
+			"rs_3doors.gif":["Anyway, somebody went through a lot",
+				"to Pool (toward EMU parts or +mys buff or elfpacks)",
+				"To Armory (toward EMU joystick/elfpacks or +mus/mox buffs)",
+				"to Mess (toward effects or EMU rocket)"],
+			"rs_junction.gif":["A blond-haired disembodied head",
+				"to EMU joystick",
+				"to elven packs",
+				"back to Lobby"],
+			"elf_headcrab.gif":["vast bank of television screens",
+				"to EMU rocket thrusters",
+				"effect: +5 myst substat/fight"],
+			"elfscientist.gif":["could sure use those thrusters",
+				"EMU rocket thrusters"],
+			"elfdonfreeman.gif":["There are two joysticks on it",
+				"EMU joystick"],
+			"rs_portal.gif":["through into the shaft",
+				"medi-pack and magi-pack"],
+			"surv_overarmed.gif":["down the hallway to the armory",
+				"to Lobby",
+				"to Keycard",
+				"to Romance (choice of buffs)"],
+			"rs_2doors.gif":["sliding towards the male elf",
+				"effect: +5 mus substat/fight",
+				"effect: +5 mox substat/fight"],
+			"surv_unlikely.gif":["You follow the signs to the Mess",
+				"to Lobby",
+				"to Romance (choice of buffs)",
+				"to Headcrab (effect or EMU rocket thrusters)"],
+			"rs_door.gif":["You follow the map to the secret bunker",
+				"to Lobby"],
+			"elfordbrimley.gif":["doesn't look swimmable",
+				"to Lobby",
+				"to Headcrab (Effect or EMU rocket thrusters)",
+				"to Keycard"]
+		}
 	};
-	GM_log("in do_580map");
-	var imgfile = document.getElementsByTagName('img')[0].src.split('/')[4];
-	if (imgfile == "stonewool.gif") imgfile = document.getElementsByTagName('img')[1].src.split('/')[4];
-	GM_log("imgfile="+imgfile);
-	var inputs = document.getElementsByTagName('input');
-	var choicenumber = 1;
-	var thisopt = otherOptions[imgfile];
-	if (inputs.length && thisopt) {
-		for (var n=0; n<inputs.length; n++) {
-			if (inputs[n] && inputs[n].type == "submit") {
-				inputs[n].value += " -- " + thisopt[choicenumber++];
-				GM_log("setting option " + n + " to " + thisopt[choicenumber]);
+//	GM_log("in GetSpoilersForImageName");
+	if ((advOptions[advNumber] !== undefined) && (advOptions[advNumber][imageName] !== undefined)) {
+		 return advOptions[advNumber][imageName]; 
+	}
+	else { return null; }
+}
+
+function GetSpoilersForBodyText(advNumber, URL, imageName, bodyText) {
+	//data format:
+	// advOption[adventureNumber][Url-or-imagename][sequencenumber] = array of strings.
+	//array element 0 = required ID text (can be any part of HTML); 1-n = spoiler text.
+	var i = 0, advOptions ={
+    "0": {
+        "/friars.php": {
+            "0": [
+                "Brother Flying Burrito, the Deep Fat Friar",
+                "+30% food drops (20 adv)"
+            ],
+            "1": [
+                "Brother Corsican, the Deep Fat Friar",
+                "+2 familiar experience per combat (20 adv)"
+            ],
+            "2": [
+                "Brother Smothers, the Deep Fat Friar",
+                "+30% booze drops (20 adv)"
+            ]
+        },
+        "/basement.php": {
+            "0": [
+                "twojackets",
+                "+(mainstat) Mox",
+                "+(mainstat) Mus"
+            ],
+            "1": [
+                "twopills",
+                "+(mainstat) Mus",
+                "+(mainstat) Myst"
+            ],
+            "2": [
+                "figurecard",
+                "+(mainstat) Myst",
+                "+(mainstat) Mox"
+            ]
+        },
+        "/bigisland.php": {
+            "0": [
+                "Get Healed",
+                "+1,000 HP"
+            ],
+            "1": [
+                "Get a Massage",
+                "+1,000 HP, +1,000 MP"
+            ],
+            "2": [
+                "Party with the free spirits",
+                "+5 stats per combat (20 adv)",
+                "+20% item drops (20 adv)",
+                "+5lb familiar weight (20 adv)"
+            ],
+            "3": [
+                "Try to get into the music",
+                "+10% all stats (20 adv)",
+                "+40% meat drops (20 adv)",
+                "+50% initiative (20 adv)"
+            ]
+        },
+        "/postwarisland.php": {
+            "0": [
+                "Get Healed",
+                "+1,000 HP"
+            ],
+            "1": [
+                "Get a Massage",
+                "+1,000 HP, +1,000 MP"
+            ],
+            "2": [
+                "Party with the free spirits",
+                "+5 stats per combat (20 adv)",
+                "+20% item drops (20 adv)",
+                "+5lb familiar weight (20 adv)"
+            ],
+            "3": [
+                "Try to get into the music",
+                "+10% all stats (20 adv)",
+                "+40% meat drops (20 adv)",
+                "+50% initiative (20 adv)"
+            ]
+        },
+        "/palinshelves.php": {
+            "0": [
+                "Drawn Onward",
+                "\nwith photo of God, hard rock candy, ketchup hound and ostrich ",
+                "nothing (no adv loss)"
+            ]
+        },
+        "/clan_viplounge.php": {
+            "0": [
+                "You approach the pool table.",
+                "+5 lb familiar weight/+50% weapon damage (10 adv)",
+                "+10 MP/turn, +50% spell damage (10 adv)",
+                "+10% item drops, +50% initiative (10 adv)"
+            ],
+            "1": [
+                "You change into your swimsuit",
+                "\nGet into the pool",
+                "+30 init, +25 stench damage, +20 ML (50 turns)",
+                "\ndecreased chance of random PvP, +NC (50 turns)"
+            ]
+        },
+        "/clan_rumpus.php": {
+            "0": [
+                "This jukebox has a staggering",
+                "+10% meat drops (10 turns)",
+                "+3 stats per combat (10 turns)",
+                "+10% item drops (10 turns)",
+                "+20% initiative (10 turns)",
+                "buy a different piece of clan furniture for this spot"
+            ],
+            "1": [
+                "There's a ball pit here with",
+                "+(balls/100)% to all stats (20 turns)"
+            ],
+            "2": [
+                "Unfortunately for you, only the three least popular flavors",
+                "an item giving +30 Mox (10 turns)",
+                "an item giving +30 Mus (10 turns)",
+                "an item giving +30 Mysticality (10 turns)",
+                "buy a different piece of clan furniture for this spot"
+            ]
+        }
+    },
+    "536": {
+        "gs_dark3doors.gif": {
+            "0": [
+                "You walk behind the bar",
+                "To Tavern",
+                "To Sleeping Quarters (food/drink pills)",
+                "To Warehouse (HP regen effect or EMU harness)"
+            ],
+            "1": [
+                "You step through the door",
+                "distention pill (food)",
+                "synthetic dog hair pill (drink)",
+                "To Tavern"
+            ]
+        },
+        "rs_portal.gif": {
+            "0": [
+                "You walk through the door and into what appears to be some kind of laboratory",
+                "EMU Harness"
+            ],
+            "1": [
+                "You open the door and walk into a dark room",
+                "2 elven hardtack+2 elven squeeze"
+            ],
+            "2": [
+                "You step from the clean, bright hallway",
+                "EMU helmet"
+            ]
+        }
+    }
+};
+//	GM_log("in GetSpoilersForBodyText");
+//	GM_log("bodyText = " + bodyText);
+	if (advNumber === 0) {
+		for (i in advOptions[0][URL]) {
+//			GM_log("i="+i+"; checking for text:" +advOptions[0][URL][i][0]);
+			if (bodyText.indexOf(advOptions[0][URL][i][0]) !== -1) {
+				GM_log("found text "+advOptions[0][URL][i][0]);
+				return advOptions[0][URL][i];
+			}
+		}
+		return null;
+	} else {
+		for (i in advOptions[advNumber][imageName]) {
+//			GM_log("i="+i+"; checking for text: "+advOptions[0][imageName][i][0]);
+			if (bodyText.indexOf(advOptions[0][imageName][i][0]) !== -1) {
+				GM_log("found text "+advOptions[0][imageName][i][0]);
+				return advOptions[0][imageName][i];
 			}
 		}
 	}
+	return null;
 }
 
-function do_535map() {
-	if (map == 535) {
-//		GM_log("already mapped this.");
-		return;
-	}
-	var otherOptions = {	// ID text optional here because we use the image name to ID the adventure
-		"rs_3doors.gif":["Anyway, somebody went through a lot","to Pool (toward EMU parts or +mys buff or elfpacks)","To Armory (toward EMU joystick/elfpacks or +mus/mox buffs)","to Mess (toward effects or EMU rocket)"],
-		"rs_junction.gif":["A blond-haired disembodied head","to EMU joystick","to elven packs","back to Lobby"],
-		"elf_headcrab.gif":["vast bank of television screens","to EMU rocket thrusters","effect: +5 myst substat/fight"],
-		"elfscientist.gif":["could sure use those thrusters","EMU rocket thrusters"],
-		"elfdonfreeman.gif":["There are two joysticks on it","EMU joystick"],
-		"rs_portal.gif":["through into the shaft","medi-pack and magi-pack"],
-		"surv_overarmed.gif":["down the hallway to the armory","to Lobby","to Keycard","to Romance (choice of buffs)"],
-		"rs_2doors.gif":["sliding towards the male elf","effect: +5 mus substat/fight","effect: +5 mox substat/fight"],
-		"surv_unlikely.gif":["You follow the signs to the Mess","to Lobby","to Romance (choice of buffs)","to Headcrab (effect or EMU rocket thrusters)"],
-		"rs_door.gif":["You follow the map to the secret bunker","to Lobby"],
-		"elfordbrimley.gif":["doesn't look swimmable","to Lobby","to Headcrab (Effect or EMU rocket thrusters)","to Keycard"],
-
-	};
-	GM_log("in do_535map");
-	var imgfile = document.getElementsByTagName('img')[0].src.split('/')[4];
-	GM_log("imgfile="+imgfile);
-	var inputs = document.getElementsByTagName('input');
-	var choicenumber = 1;
-	var thisopt = otherOptions[imgfile];
-	if (inputs.length && thisopt) {
-		for (var n=0; n<inputs.length; n++) {
-			if (inputs[n] && inputs[n].type == "submit") inputs[n].value += " -- " + thisopt[choicenumber++];
-		}
-	}
-}
-
-function do_536map() {
-	if (map == 536) {
-//		GM_log("already mapped this.");
-		return;
-	}
-	var otherOptions = { // ID text optional here because we use the image name
-		"gs_hatch.gif":["","To Tavern"], // entryway
-		"gs_tavern.gif":["","To Bar (toward food/drink pills)","To Coatcheck (toward EMU parts)","To Campsite (toward food/drink pills or elven supplies/EMU helmet)"], // tavern
-		"gs_dark3doors.gif":["","To Tavern","To Sleeping Quarters (food/drink pills)","To Warehouse (HP regen effect or EMU harness)"], // Bar
-		"gs_medbio.gif":["","Effect: Heal thy nanoself (regen 10-20 HP, 10 turns)","to EMU harness","to Tavern"], //Warehouse
-		"rs_portal.gif":["THE SONIC OSCILLATOR","EMU Harness"], //Harness Lab
-		"gs_bellhops.gif":["","To Warehouse (HP regen effect or EMU harness)","To Hallway (elven supplies or EMU helmet)","To Tavern"], // coat check
-		"gs_3doors.gif":["","To elven supplies","to EMU helmet","To Tavern"], // Hallway
-		"gs_camp3doors.gif":["","To Sleeping Quarters (food/drink pills)","To Hallway (elven supplies or EMU helmet)","To Tavern"], // Campground
-//		"rs_portal.gif":["","2 elven hardtack+2 elven squeeze"], //supplies lab
-//		"rs_portal.gif":["","EMU helmet"], 						// helmet lab
-//		"gs_dark3doors.gif":["","distention pill","synthetic dog hair pill","To Tavern"], // sleeping quarters
-	};
-	var darkdoors = { // ID text required here because the image name is not unique sometimes.  Bastards.
-		0:["You walk behind the bar","To Tavern","To Sleeping Quarters (food/drink pills)","To Warehouse (HP regen effect or EMU harness)"],
-		1:["You step through the door","distention pill (food)","synthetic dog hair pill (drink)","To Tavern"]
-	};
-	var portal = { // also required here.  bah.
-		0:["You walk through the door and into what appears to be some kind of laboratory","EMU Harness"],
-		1:["You open the door and walk into a dark room","2 elven hardtack+2 elven squeeze"],
-		2:["You step from the clean, bright hallway","EMU helmet"]
-	};
-	GM_log("in do_536map");
-	var imgfile = document.getElementsByTagName('img')[0].src.split('/')[4];
-	GM_log("imgfile="+imgfile);
-	var inputs = document.getElementsByTagName('input');
-	var choicenumber = 1;
-	var thisopt = otherOptions[imgfile];
-	var q = 0;
-	if (imgfile == "gs_dark3doors.gif") {
-		var advtext = document.getElementsByTagName('body')[0].textContent;
-		while (q < 2) {
-			if (advtext.indexOf(darkdoors[q][0]) != -1) break;
-			q++;
-		}
-		thisopt = darkdoors[q];
-//		GM_log("q="+q+",content="+advtext);
-	}
-	else if (imgfile == "rs_portal.gif") {
-		var advtext = document.getElementsByTagName('body')[0].textContent;
-		while (q < 3) {
-			if (advtext.indexOf(portal[q][0]) != -1) break;
-			q++;
-		}
-		thisopt = portal[q];	
-//		GM_log("q="+q+",content="+advtext);
-	}
-	if (inputs.length && thisopt) {
-		for (var n=0; n<inputs.length; n++) {
-			if (inputs[n] && inputs[n].type == "submit") inputs[n].value += " -- " + thisopt[choicenumber++];
-		}
-	}		
-}		
-	
-		
 
 function autoUpdate (id, version){
 	function eliminaElem(e){if(e)e.parentNode.removeChild(e)}
@@ -1078,3 +1180,4 @@ function autoUpdate (id, version){
 		}
 	});
 }
+
