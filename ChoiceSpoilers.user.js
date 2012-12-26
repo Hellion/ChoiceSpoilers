@@ -1,17 +1,17 @@
 // Tard's KoL Scripts
 // Copyright (c) 2006, Byung Kim
-// New releases Copyright (c) 2009, 2010 by Hellion
+// New releases Copyright (c) 2009-2013 by Hellion
 // Released under the GPL license
 // http://www.gnu.org/copyleft/gpl.html
 //
 // ==UserScript==
 // @name           Tard's Kol Scripts - Choice Adventure Rewards
-// @version        3.07
+// @version        3.09
 // @namespace      http://kol.dashida.com
 // @author		   Tard
 // @author         Hellion
 // @author         Aelsa
-// @include    *kingdomofloathing.com/choice.php
+// @include    *kingdomofloathing.com/choice.php*
 // @include    *kingdomofloathing.com/basement.php
 // @include	   *kingdomofloathing.com/friars.php*
 // @include	   *kingdomofloathing.com/bigisland.php*
@@ -23,7 +23,7 @@
 // @include    *127.0.0.1:*/clan_viplounge.php*
 // @include	   *127.0.0.1:*/clan_rumpus.php*
 // @include    *127.0.0.1:*/main.php
-// @include    *127.0.0.1:*/choice.php
+// @include    *127.0.0.1:*/choice.php*
 // @include    *127.0.0.1:*/basement.php
 // @include	   *127.0.0.1:*/friars.php*
 // @include	   *127.0.0.1:*/bigisland.php*
@@ -32,12 +32,14 @@
 // @include    *localhost:*/clan_viplounge.php*
 // @include	   *localhost:*/clan_rumpus.php*
 // @include    *localhost:*/main.php
-// @include    *localhost:*/choice.php
+// @include    *localhost:*/choice.php*
 // @include    *localhost:*/basement.php
 // @include	   *localhost:*/friars.php*
 // @include	   *localhost:*/bigisland.php*
 // @include	   *localhost:*/postwarisland.php*
 // @include    *localhost:*/palinshelves.php
+// @history 3.09 updated for new level-9 quest stuff, bugbears/zombies, skeleton usage, etc.
+// @history 3.08 updated include list for new choice URL standard, added clan VIP swimming pool
 // @history 3.07 added Kloop, new spooky temple
 // @history 3.06 added Haunted Sorority house
 // @history 3.05 added safety maps
@@ -50,7 +52,7 @@
 
 
 if (window.location.pathname == "/main.php") {	// just logged in, do certain stuff once.
-	autoUpdate(68727,"3.06");
+	autoUpdate(68727,"3.09");
 }
 if (window.name == "mainpane") {
 //	var place = location.pathname.replace(/\/|\.(php|html)$/gi, "").toLowerCase();
@@ -442,10 +444,10 @@ if (window.name == "mainpane") {
 		452:["Leave a message and I'll call you back","\nwith raisin in machine: kill spider\nwithout: lose (all?) HP",
 													  "\nif spider alive: tiny fly glasses\nif spider dead: Flyest of Shirts (if torso-aware)/nothing",
 													  "\nif fruit in machine: 3 fruit\notherwise nothing"],
-		453:["Getting a leg up","fight jungle scabie","gain 30-40 mus, mys, and mox","acquire hair of the calf"],
-		454:["Just Like the Ocean Under the Moon","fight smooth jazz scabie","gain 90-100 HP and 90-100 MP"],
+		453:["Getting a leg up","Monster: jungle scabie","gain 30-40 mus, mys, and mox","acquire hair of the calf"],
+		454:["Just Like the Ocean Under the Moon","Monster: smooth jazz scabie","gain 90-100 HP and 90-100 MP"],
 		455:["Double Trouble in the Stubble","gain 50-60 mus, mys, and mox","\mwith can-you-dig-it:acquire legendary beat\nwithout: lose (lots of) HP"],
-		456:["Made it, Ma!  Top of the world!","Fight The Whole Kingdom","effect: Hurricane Force","acquire a dance upon the palate (first time only)","gain 31-40 mus, mys, and mox"],
+		456:["Made it, Ma!  Top of the world!","Monster: The Whole Kingdom","effect: Hurricane Force","acquire a dance upon the palate (first time only)","gain 31-40 mus, mys, and mox"],
 		
 											
 		//Kegger in the woods
@@ -453,7 +455,7 @@ if (window.name == "mainpane") {
 		
 		//New tavern
 		496:["Crate Expectations","acquire 3 base boozes","clear square (no adv loss)"],
-		511:["If it's tiny, is it still a mansion?","Fight Baron von Ratsworth","nothing (no adv loss)"],
+		511:["If it's tiny, is it still a mansion?","Monster: Baron von Ratsworth","nothing (no adv loss)"],
 		512:["Hot and Cold Running Rats","monster: drunken rat","nothing (no adv loss)"],
 		513:["Staring Down the Barrel","3-5 ice-cold willers","clear square (no adv loss)"],
 		514:["1984 Had Nothing On This Cellar","3-5 rat whiskers or smiling rat familiar","clear square (no adv loss)"],
@@ -462,7 +464,7 @@ if (window.name == "mainpane") {
 		//Lab
 		516:["Mr. Alarm, I Presarm","unlock Whitey's Grove, continue quest"],
 		//Neckback Crick
-		497:["SHAFT!","Fight unearthed monstrosity","nothing"],
+		497:["SHAFT!","Monster: unearthed monstrosity","nothing"],
 		
 		// vamp out
 		546:["Interview with You","","","","nothing (no turn loss)"],
@@ -505,21 +507,22 @@ if (window.name == "mainpane") {
 		// Kloop:
 		560:["Foreshadowing Demon!","\nEnables choice of Thorax/Bat-in-Spats adventure","nothing (no adv loss)"],
 		561:["You must choose your destruction!","\nEnable fight with Thorax","\nEnable fight with Bat-in-Spats"],
-		563:["A test of your mettle","\nFight either Thorax or Bat-in-Spats","\nnothing (no adv loss)"],
+		563:["A test of your mettle","\nProceed to choice of Thorax or Bat-in-Spats","\nnothing (no adv loss)"],
 		564:["A maelstrom of trouble","\nEnable option to fight boss demons (Pinch or Thugs)","\nnothing (no adv loss)"],
-		565:["To get groped or get mugged?","\nFight The Terrible Pinch","\nFight Thug 1 and Thug 2"],
-		566:["A choice to be made","\nFight either Pinch or Thugs 1 and 2","\nnothing (no adv loss)"],
+		565:["To get groped or get mugged?","\nMonster: The Terrible Pinch","\nMonster: Thug 1 and Thug 2"],
+		566:["A choice to be made","\nProceed to choice of The Terrible Pinch or Thugs 1 and 2","\nnothing (no adv loss)"],
 		567:["You may be on thin ice","\nenable option to fight boss demons (Mammon or Snitch)","nothing (no adv loss)"],
-		568:["Some Sounds Most Unnerving","\nfight Mammon the Elephant","\nFight The Large-Bellied Snitch"],
-		569:["One More demon to slay","\nFight either Mammon or Snitch","\nnothing (no turn loss)"],
+		568:["Some Sounds Most Unnerving","\nMonster: Mammon the Elephant","\nMonster: The Large-Bellied Snitch"],
+		569:["One More demon to slay","\nProceed to choice of Mammon or Snitch","\nnothing (no turn loss)"],
 			
 		// New hidden temple!
-		581:["Such Great Depths","acquire glowing fungus","effect: Hidden Power (+15 all stats)","fight clan of cave bars"],
+		581:["Such Great Depths","acquire glowing fungus","effect: Hidden Power (+15 all stats)","Monster: clan of cave bars"],
 		582:["Fitting In","\nProceed to choice of Mys gain/Hidden City Unlock item/buff extension + 3 turns",
 				"\nProceed to Hidden Heart of the Hidden Temple\n(Hidden City unlock path)",
 				"\nProceed to choice of (glowing fungus/buff/fight clan of cave bars)"],
 		579:["Such Great Heights",
 				"\n+(some) Mys","acquire The Nostril of the Serpent\n(first time only)","+3 Adv, +3 turns of effects (first time only)"],
+//		can't do 580 directly, it's a multi-part choice.  bah.
 //		580:["Hidden Heart (pikachu)",
 //				"unlock hidden city",
 //				"\nwith Nostril of the Serpent: Unconfusing buttons\nwithout: Confusing buttons",
@@ -529,6 +532,89 @@ if (window.name == "mainpane") {
 				"set Hidden Heart adv to sun (calendar fragment/buttons/moxie",
 				"set hidden heart adv to gargoyle (+MP/buttons/moxie",
 				"set hidden heart adv to Pikachulotl (hidden city unlock/buttons/moxie"],
+
+		//Twin Peak
+		605:["Welcome to the Great Overlook Lodge","/nstart the quest process"],
+		606:["Lost in the Great Overlook Lodge",
+			"\nproceed to Room 237 (need at least 4 levels of stench resistance)",
+			"\nproceed to Go Check It Out! (need at least +50% item drop (not including your familiar)",
+			"\nproceed to There's Always Music In the Air (need jar of oil (made from drops at Oil Peak)",
+			"\nproceed to To Catch a Killer (need at least +40% combat initiative)",
+			"\nnothing (no turn loss?)"],
+		607:["Room 237","\n with 4 or more levels of stench resistance: advance quest status\nwithout: nothing",
+			"\nnothing"],
+		608:["Go Check It Out!","\nwith at least +50% item drop: advance quest status\nwithout: nothing",
+			"\nnothing"],
+		609:["There's Always Music in the Air","\nwith jar of oil: advance quest status\nwithout: nothing",
+			"\nnothing"],
+		610:["To Catch a Killer","\nwith at least +40% combat init: complete this zone\nwithout: nothing",
+			"\nnothing"],
+		616:["He Is the Arm, and He Sounds Like This","\nadvance quest status"],
+		617:["Now It's Dark","\ncomplete the zone"],
+
+		//A-Boo Peak:
+		611:["The Horror...","\nLeave","take increasing Cold & spooky damage, advance zone completion percentage",
+			"\nleave (no damage, no advancement)"],
+		
+		//multi-using skeletons
+		603:["Skeletons and The Closet",
+			"\nacquire effect: Skeletal Warrior, 30 turns (delevel, physical damage)",
+			"\nacquire effect: Skeletal Cleric, 30 turns (hot damage, restore HP)",
+			"\nacquire effect: Skeletal Wizard, 30 turns (cold damage, restore MP)",
+			"\nacquire effect: Skeletal Rogue, 30 turns (first-round physical damage, bonus meat drop)",
+			"\nacquire effect: Skeletal Buddy, 30 turns (+2 stats/fight, delevel enemy defense each round)",
+			"\ndo nothing (cancel using the skeleton)\n" +
+			"\nnote that acquiring multiple effects simultanously gives additional bonuses\n"
+			],
+
+		//mimes?
+		612:["Behind the world there is a door...","\nProceed to Behind The Door There is a Fog","\nleave (no adv loss)"],
+		613:["Behind the door there is a fog",
+			"\nsee part of a message",
+			"\nMonster: 4-shadowed mime",
+			"\nproceed to anvil (choice of soul fragment smithings)",
+			"\nwith soul coin: acquire class-based skill recording\nwithout: nothing (turn is lost)"],
+		614:["Near the fog there is an... anvil?",
+			"soul doorbell",
+			"soul mask",
+			"soul knife",
+			"soul coin",
+			"nothing",
+			"nothing"],
+
+		//Camp scouts
+		595:["Fire!  I... have made... Fire!",
+			"+3 PvP fights (if hippy stone is already broken)",
+			"regenerate 3-5 MP and 3-5 HP per combat"],
+
+		//Gnome at Susie:
+		597:["",
+			"\ngnome breathes underwater; reduce pressure penalty by 10%",
+			"\ngnome blocks attacks",
+			"\ngnome attacks in combat",
+			"\ngnome grants adventures like a riftlet",
+			"\ngnome delevels like a barrrnacle"],
+	
+		//Bugbear path
+		588:["Machines!",
+			"\n(should be set to 2)",
+			"\n(should be set to 4)",
+			"\n(should be set to 8)"],
+		589:["Autopsy Auturvy",
+			"\nwith tweezers: advance zone\nwithout: nothing",		
+			"\nwith tweezers: advance zone\nwithout: nothing",		
+			"\nwith tweezers: advance zone\nwithout: nothing",		
+			"\nwith tweezers: advance zone\nwithout: nothing",		
+			"\nwith tweezers: advance zone\nwithout: nothing",		
+			"\nnothing"],
+		590:["Not Alone in the Dark",
+			"\nfight Black Ops Bugbear, or nothing",
+			"\nincrease fight chance when looking for a fight",
+			"\nnothing (no adv loss)"],
+
+		//lost key
+		594:["A Lost Room"],	//hm.  must check out further.
+	
 
 		};
 		
@@ -595,7 +681,9 @@ if (window.name == "mainpane") {
 			// Rumpus Room: jukebox, ballpit, chips
 			9:["This jukebox has a staggering","+10% meat drops (10 turns)","+3 stats per combat (10 turns)","+10% item drops (10 turns)","+20% initiative (10 turns)"],
 			10:["There's a ball pit here with","+(balls/100)% to all stats (20 turns)"],
-			11:["Unfortunately for you, only the three least popular flavors","an item giving +30 Mox (10 turns)","an item giving +30 Mus (10 turns)","an item giving +30 Mysticality (10 turns)"]
+			11:["Unfortunately for you, only the three least popular flavors","an item giving +30 Mox (10 turns)","an item giving +30 Mus (10 turns)","an item giving +30 Mysticality (10 turns)"],
+			// Clan VIP swimming pool
+			12:["You change into your swimsuit","\nGet into the pool","+30 init, +25 stench damage, +20 ML (50 turns)","\ndecreased chance of random PvP, +NC (50 turns)"],
 		};
 //		GM_log("checking for buff areas");
 		bodyHTML = document.getElementsByTagName('body')[0].innerHTML;
@@ -683,14 +771,14 @@ function do_536map() {
 		"gs_hatch.gif":["","To Tavern"], // entryway
 		"gs_tavern.gif":["","To Bar (toward food/drink pills)","To Coatcheck (toward EMU parts)","To Campsite (toward food/drink pills or elven supplies/EMU helmet)"], // tavern
 		"gs_dark3doors.gif":["","To Tavern","To Sleeping Quarters (food/drink pills)","To Warehouse (HP regen effect or EMU harness)"], // Bar
-//		"gs_dark3doors.gif":["","distention pill","synthetic dog hair pill","To Tavern"], // sleeping quarters
 		"gs_medbio.gif":["","Effect: Heal thy nanoself (regen 10-20 HP, 10 turns)","to EMU harness","to Tavern"], //Warehouse
 		"rs_portal.gif":["THE SONIC OSCILLATOR","EMU Harness"], //Harness Lab
-//		"rs_portal.gif":["","2 elven hardtack+2 elven squeeze"], //supplies lab
-//		"rs_portal.gif":["","EMU helmet"], 						// helmet lab
 		"gs_bellhops.gif":["","To Warehouse (HP regen effect or EMU harness)","To Hallway (elven supplies or EMU helmet)","To Tavern"], // coat check
 		"gs_3doors.gif":["","To elven supplies","to EMU helmet","To Tavern"], // Hallway
 		"gs_camp3doors.gif":["","To Sleeping Quarters (food/drink pills)","To Hallway (elven supplies or EMU helmet)","To Tavern"], // Campground
+//		"rs_portal.gif":["","2 elven hardtack+2 elven squeeze"], //supplies lab
+//		"rs_portal.gif":["","EMU helmet"], 						// helmet lab
+//		"gs_dark3doors.gif":["","distention pill","synthetic dog hair pill","To Tavern"], // sleeping quarters
 	};
 	var darkdoors = { // ID text required here because the image name is not unique sometimes.  Bastards.
 		0:["You walk behind the bar","To Tavern","To Sleeping Quarters (food/drink pills)","To Warehouse (HP regen effect or EMU harness)"],
