@@ -74,9 +74,16 @@ if (window.name == "mainpane") {
 	}
 //	GM_log("found choice " + adventureChoiceNumber);
 	SpoilerSet = GetSpoilersForAdvNumber(adventureChoiceNumber);
-	if (SpoilerSet === undefined || SpoilerSet === null) { 
-		imageName = document.getElementsByTagName('img')[0].src.split('/')[4];
-		SpoilerSet = GetSpoilersForImageName(adventureChoiceNumber, imageName);
+	if (SpoilerSet === undefined || SpoilerSet === null) {
+		//find the adventure's image.  (in some cases this will not be the first image, e.g. when you lose the Stone Wool effect when starting a Hidden Temple choice.)
+		var imageName = "";
+		var images = document.getElementsByTagName('img');
+		for (var foo = 0; foo < images.length; foo++) {
+			if (images[foo].src.indexOf('adventureimages') != -1) {
+				imageName = images[foo].src.split('/')[4]; break;
+			}
+		}
+		if (imageName != "") SpoilerSet = GetSpoilersForImageName(adventureChoiceNumber, imageName);
 		if (SpoilerSet === undefined || SpoilerSet === null) {
 			var bodyText = document.getElementsByTagName('body')[0].innerHTML; //textContent;
 			var URL = window.location.pathname; 
@@ -613,7 +620,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		617:["Now It's Dark","\ncomplete the zone"],
 
 		//A-Boo Peak:
-		611:["The Horror...","\nLeave","take increasing Cold & spooky damage, advance zone completion percentage",
+		611:["The Horror...","take increasing Cold & spooky damage, advance zone completion percentage",
 			"\nleave (no damage, no advancement)"],
 		
 		//multi-using skeletons
@@ -670,10 +677,8 @@ function GetSpoilersForAdvNumber(advNumber) {
 		590:["Not Alone in the Dark",
 			"\nfight Black Ops Bugbear, or nothing",
 			"\nincrease fight chance when looking for a fight",
-			"\nnothing (no adv loss)"],
+			"\nnothing (no adv loss)"]
 
-		//lost key
-		594:["A Lost Room"]	//hm.  must check out further.
 	};
 //	GM_log("in GetSpoilersForAdvNumber");
 	if (advOptions[advNumber] !== undefined) { return advOptions[advNumber]; }
@@ -871,7 +876,6 @@ function GetSpoilersForBodyText(advNumber, URL, imageName, bodyText) {
         }
     },
     "536": {
-        "gs_dark3doors.gif": {
             "0": [
                 "You walk behind the bar",
                 "To Tavern",
@@ -883,22 +887,19 @@ function GetSpoilersForBodyText(advNumber, URL, imageName, bodyText) {
                 "distention pill (food)",
                 "synthetic dog hair pill (drink)",
                 "To Tavern"
-            ]
-        },
-        "rs_portal.gif": {
-            "0": [
+            ],
+            "2": [
                 "You walk through the door and into what appears to be some kind of laboratory",
                 "EMU Harness"
             ],
-            "1": [
+            "3": [
                 "You open the door and walk into a dark room",
                 "2 elven hardtack+2 elven squeeze"
             ],
-            "2": [
+            "4": [
                 "You step from the clean, bright hallway",
                 "EMU helmet"
             ]
-        }
     }
 };
 //	GM_log("in GetSpoilersForBodyText");
@@ -913,11 +914,11 @@ function GetSpoilersForBodyText(advNumber, URL, imageName, bodyText) {
 		}
 		return null;
 	} else {
-		for (i in advOptions[advNumber][imageName]) {
+		for (i in advOptions[advNumber]) {
 //			GM_log("i="+i+"; checking for text: "+advOptions[0][imageName][i][0]);
-			if (bodyText.indexOf(advOptions[0][imageName][i][0]) !== -1) {
-				GM_log("found text "+advOptions[0][imageName][i][0]);
-				return advOptions[0][imageName][i];
+			if (bodyText.indexOf(advOptions[advNumber][i][0]) !== -1) {
+				GM_log("found text "+advOptions[advNumber][i][0]);
+				return advOptions[advNumber][i];
 			}
 		}
 	}
