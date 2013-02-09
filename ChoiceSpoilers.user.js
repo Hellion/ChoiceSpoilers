@@ -21,6 +21,7 @@
 // @include    *kingdomofloathing.com/palinshelves.php
 // @include    *kingdomofloathing.com/clan_viplounge.php*
 // @include	   *kingdomofloathing.com/clan_rumpus.php*
+// @include	*kingdomofloathing.com/campground.php*
 // @include	   *kingdomofloathing.com/main.php
 // @include    *127.0.0.1:*/clan_viplounge.php*
 // @include	   *127.0.0.1:*/clan_rumpus.php*
@@ -31,6 +32,8 @@
 // @include	   *127.0.0.1:*/bigisland.php*
 // @include	   *127.0.0.1:*/postwarisland.php*
 // @include    *127.0.0.1:*/palinshelves.php
+// @include	*127.0.0.1:*/campground.php*
+// @include	*127.0.0.1:*/main.php
 // @include    *localhost:*/clan_viplounge.php*
 // @include	   *localhost:*/clan_rumpus.php*
 // @include    *localhost:*/main.php
@@ -40,8 +43,10 @@
 // @include	   *localhost:*/bigisland.php*
 // @include	   *localhost:*/postwarisland.php*
 // @include    *localhost:*/palinshelves.php
+// @include	*localhost:*/campground.php*
+// @include	*localhost:*/main.php
 // @grant	GM_log
-// @history 3.10 refactor the actual addition of spoiler text to eliminate code duplication.
+// @history 3.10 refactor the actual addition of spoiler text to eliminate code duplication; add campground spoilers.
 // @history 3.09 updated for new level-9 quest stuff, bugbears/zombies, skeleton usage, etc.
 // @history 3.08 updated include list for new choice URL standard, added clan VIP swimming pool
 // @history 3.07 added Kloop, new spooky temple
@@ -475,6 +480,41 @@ function GetSpoilersForAdvNumber(advNumber) {
 		363:["","+some Myst (max 200?)","+15% Myst (20 turns)"],
 		364:["","+some Mox (max 200?)","Supreme Being Glossary (advance quest state)","+some Mus (max 200?)"],
 		365:["None Shall Pass","-30 meat, +50 Mus","-60 meat, multi-pass (advance quest state)","nothing (no adv loss??)"],
+		392:["The Elements of Surprise...","\nCorrect order is: Sleaze/Spooky/Stench/Cold/Hot"],
+		//Krakrox
+		366:["Entrance","Proceed to City Center","nothing"],
+		367:["Ancient Temple","Proceed to Northern gate","?","\nwith memories of stone half-circle and half stone circle: unlock Ancient Temple\nwithout: nothing","Leave"],
+		368:["City Center","To North Side","To East Side","To West Side","","To Well","nothing"],
+		369:["North Side","To Northern Gate","To Ancient Tower","To City Center","nothing"],
+		370:["East Side","To North Abandoned Building","To City Center","To South Abandoned Building","nothing"],
+		371:["West Side","To Ancient Tower","To City Center","To Storehouse","nothing"],
+		372:["Ancient Well","To City Center","\nwithout grappling hook: nothing\nwith grappling hook: Monster: giant octopus\nafter fighting octopus: retrieve grappling hook","nothing (continue choices)","nothing"],
+		373:["Northern Gate",
+			"To North Side",
+			"do something in the catacombs",
+			"enable northern gate lever",
+			"\nafter manipulating Catacomb Machinery: open Ancient Temple through this gate\notherwise nothing",
+			"proceed to Ancient Temple",
+			"enable ?",
+			"enable northern gate lever",
+			"open ?",
+			"nothing (continue choices)",
+			"nothing (leave city)"],
+		374:["Ancient Tower","To North Side","To West Side","\nwith grappling hook: Monster: giant bird-creature\nfirst time after fighting bird: acquire memory of half a stone circle\nwithout: nothing (leave city)","nothing (leave city)"],
+		375:["Northern Abandoned Building","To East Side","\nfirst time: acquire iron key\nsubsequent: nothing","to Basement","nothing (leave city)"],
+		376:["Ancient Temple",
+			"\nwithout glowing crystal: nothing\nwithout having created supervirus: Monster: ancient temple guardian\nwithout wearing cultist's robe: Monster: group of cultists\nwith all of the above: Monster: High Priest of Ki'rhuss","nothing (leave city)"],
+		377:["Southern abandoned building","To East Side","To Upstairs","to Basement","nothing (leave city)"],
+		378:["Storehouse","To West Side","\nfirst time: acquire grappling hook\nsubsequent: nothing (leave city)","nothing (leave city)"],
+		379:["Northern Basement","to North Abandoned Building","\nfirst time: fight giant spider\nwith iron key: acquire small stone block\notherwise: nothing (leave city)","\nacquire small stone block","nothing (leave city)"],
+		380:["Southern Building Upstairs","To Southern Building Downstairs","first time: Monster: giant jungle python","?","\nfirst time: acquire little stone block","nothing (leave city)"],
+		381:["Southern Building Basement","to Southern Building Downstairs","to Catacombs Entrance","nothing (leave city)"],
+		382:["Catacombs Entrance","To Southern Building Basement","To Junction","nothing (leave city)"],
+		383:["Catacombs Junction","To Lake","To Catacombs Entrance","To Dead-End","nothing (leave city)"],
+		384:["Catacombs Dead-End","To Junction","enable chest-smashing","acquire stone half-circle","nothing (leave city)"],
+		385:["Shore of Underground Lake","To Junction","","","before killing octopus: nothing\nafter: To Machinery","nothing (leave city)"],
+		386:["Catacombs Machinery","To Lake","\nwith grappling hook and with lever pulled: collapse machinery, enable opening of northern gate\notherwise nothing","nothing (leave city)"],
+	
 		
 		//marbles
 		393:["The Collector","lose 1 of each marble, gain 32768 meat, qualify for trophy","nothing"],
@@ -677,8 +717,28 @@ function GetSpoilersForAdvNumber(advNumber) {
 		590:["Not Alone in the Dark",
 			"\nfight Black Ops Bugbear, or nothing",
 			"\nincrease fight chance when looking for a fight",
-			"\nnothing (no adv loss)"]
-
+			"\nnothing (no adv loss)"],
+		//Old Man's Bathtub
+		637:["First Mate set 1",
+			"\nadd Bristled Man-o-War to available monsters",
+			"\nblock the Deadly Hydra's crew-stealing (lose 3 crayons)",
+			"\nlose 1 crew, gain 20-23 bubbles",
+			"\nblock the giant man-eating shark's crew-stealing (lose 14-16 bubbles)"],
+		638:["First Mate set 2",
+			"\nadd Deadly Hydra to available monsters",
+			"\ngain 13-19 bubbles",
+			"\nlose 1 crew, gain 4 bubbles",
+			"\nblock the Fearsome Giant Squid's crew-stealing (lose 13-20 bubbles)"],
+		639:["First Mate set 3",
+			"\nincrease frequency of log NCs from 1/5 to 1/4 (lose 8 crew, 2-3 crayons, 17-20 bubbles)",
+			"\ngain 3 crayons",
+			"\ngain 3 crayons and 16 bubbles (lose 2 crew)",
+			"\ngain 5 crew (lose 6-16 bubbles, lose 2 crayons)"],
+		636:["First Mate set 4",
+			"\nadd Cray-Kin to available monsters",
+			"\ngain 3 crew (lose 8-10 bubbles)",
+			"\ngain 2 crayons, 8-11 bubbles",
+			"\nblock the Ferocious Roc's crew-stealing (lose 2 crayons)"]
 	};
 //	GM_log("in GetSpoilersForAdvNumber");
 	if (advOptions[advNumber] !== undefined) { return advOptions[advNumber]; }
@@ -752,6 +812,7 @@ function GetSpoilersForImageName(advNumber, imageName) {
 }
 
 function GetSpoilersForBodyText(advNumber, URL, imageName, bodyText) {
+//	GM_log("GSforBodyTextparams: adv=" + advNumber + ", URL="+URL+", imageName="+imageName);
 	//data format:
 	// advOption[adventureNumber][Url-or-imagename][sequencenumber] = array of strings.
 	//array element 0 = required ID text (can be any part of HTML); 1-n = spoiler text.
@@ -873,7 +934,14 @@ function GetSpoilersForBodyText(advNumber, URL, imageName, bodyText) {
                 "an item giving +30 Mysticality (10 turns)",
                 "buy a different piece of clan furniture for this spot"
             ]
-        }
+        },
+	"/campground.php": {
+		"0": [
+		    "Discount Telescope Warehouse.",
+		    "+(5-35)% to all stats (10 turns)",
+		    "See what's in the NS tower"
+		]
+	}
     },
     "536": {
             "0": [
@@ -908,7 +976,7 @@ function GetSpoilersForBodyText(advNumber, URL, imageName, bodyText) {
 		for (i in advOptions[0][URL]) {
 //			GM_log("i="+i+"; checking for text:" +advOptions[0][URL][i][0]);
 			if (bodyText.indexOf(advOptions[0][URL][i][0]) !== -1) {
-				GM_log("found text "+advOptions[0][URL][i][0]);
+//				GM_log("found text "+advOptions[0][URL][i][0]);
 				return advOptions[0][URL][i];
 			}
 		}
@@ -917,7 +985,7 @@ function GetSpoilersForBodyText(advNumber, URL, imageName, bodyText) {
 		for (i in advOptions[advNumber]) {
 //			GM_log("i="+i+"; checking for text: "+advOptions[0][imageName][i][0]);
 			if (bodyText.indexOf(advOptions[advNumber][i][0]) !== -1) {
-				GM_log("found text "+advOptions[advNumber][i][0]);
+//				GM_log("found text "+advOptions[advNumber][i][0]);
 				return advOptions[advNumber][i];
 			}
 		}
