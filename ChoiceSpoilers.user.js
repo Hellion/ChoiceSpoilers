@@ -788,7 +788,12 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"678":["Yeah, You're For Me, Punk Rock Giant",
 			"\nmonster: Punk Rock Giant","500-550 meat","?","Proceed to Flavor of a Raver"],
 		"679":["Keep On Turnin' the Wheel in the Sky","\ncomplete giant trash quest"],
-		"680":["Are You a Man or a Mouse?","proceed to Chore Wheel (complete giant trash quest)"]
+		"680":["Are You a Man or a Mouse?","proceed to Chore Wheel (complete giant trash quest)"],
+
+        //Degueulasse Marais
+        "696":["Stick a Fork In It":"\nOpen the Dark and Spooky Swamp","\nOpen the Wildlife Sanctuarrrrrrgh"],
+        "697":["Sophie's Choice":"\nOpen the Corpse Bog","\nOpen the Ruined Wizard Tower"],
+        "698":["From Bad to Worst","Open Swamp Beaver Territory","Open the Weird Swamp Village"]
 		
 			
 	};
