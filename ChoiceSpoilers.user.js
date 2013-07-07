@@ -7,45 +7,49 @@
 //
 // ==UserScript==
 // @name           Tard's Kol Scripts - Choice Adventure Rewards
-// @version        3.10
+// @version        3.11
 // @namespace      http://kol.dashida.com
-// @author		   Tard
+// @author	   Tard
 // @author         Hellion
 // @author         Aelsa
 // @author	Buzzy (autoupdate function; see http://userscripts.org/scripts/show/52251 )
-// @include    *kingdomofloathing.com/choice.php*
-// @include    *kingdomofloathing.com/basement.php
-// @include	   *kingdomofloathing.com/friars.php*
-// @include	   *kingdomofloathing.com/bigisland.php*
-// @include	   *kingdomofloathing.com/postwarisland.php*
-// @include    *kingdomofloathing.com/palinshelves.php
-// @include    *kingdomofloathing.com/clan_viplounge.php*
-// @include	   *kingdomofloathing.com/clan_rumpus.php*
-// @include	*kingdomofloathing.com/campground.php*
-// @include	   *kingdomofloathing.com/main.php
-// @include    *127.0.0.1:*/clan_viplounge.php*
-// @include	   *127.0.0.1:*/clan_rumpus.php*
-// @include    *127.0.0.1:*/main.php
-// @include    *127.0.0.1:*/choice.php*
-// @include    *127.0.0.1:*/basement.php
-// @include	   *127.0.0.1:*/friars.php*
-// @include	   *127.0.0.1:*/bigisland.php*
-// @include	   *127.0.0.1:*/postwarisland.php*
-// @include    *127.0.0.1:*/palinshelves.php
-// @include	*127.0.0.1:*/campground.php*
-// @include	*127.0.0.1:*/main.php
-// @include    *localhost:*/clan_viplounge.php*
-// @include	   *localhost:*/clan_rumpus.php*
-// @include    *localhost:*/main.php
-// @include    *localhost:*/choice.php*
-// @include    *localhost:*/basement.php
-// @include	   *localhost:*/friars.php*
-// @include	   *localhost:*/bigisland.php*
-// @include	   *localhost:*/postwarisland.php*
-// @include    *localhost:*/palinshelves.php
-// @include	*localhost:*/campground.php*
-// @include	*localhost:*/main.php
+// @include *kingdomofloathing.com/choice.php*
+// @include *kingdomofloathing.com/basement.php
+// @include *kingdomofloathing.com/friars.php*
+// @include *kingdomofloathing.com/bigisland.php*
+// @include *kingdomofloathing.com/postwarisland.php*
+// @include *kingdomofloathing.com/palinshelves.php
+// @include *kingdomofloathing.com/clan_viplounge.php*
+// @include *kingdomofloathing.com/clan_rumpus.php*
+// @include *kingdomofloathing.com/campground.php*
+// @include *kingdomofloathing.com/main.php
+// @include *127.0.0.1:*/clan_viplounge.php*
+// @include *127.0.0.1:*/clan_rumpus.php*
+// @include *127.0.0.1:*/main.php
+// @include *127.0.0.1:*/choice.php*
+// @include *127.0.0.1:*/basement.php
+// @include *127.0.0.1:*/friars.php*
+// @include *127.0.0.1:*/bigisland.php*
+// @include *127.0.0.1:*/postwarisland.php*
+// @include *127.0.0.1:*/palinshelves.php
+// @include *127.0.0.1:*/campground.php*
+// @include *127.0.0.1:*/main.php
+// @include *localhost:*/clan_viplounge.php*
+// @include *localhost:*/clan_rumpus.php*
+// @include *localhost:*/main.php
+// @include *localhost:*/choice.php*
+// @include *localhost:*/basement.php
+// @include *localhost:*/friars.php*
+// @include *localhost:*/bigisland.php*
+// @include *localhost:*/postwarisland.php*
+// @include *localhost:*/palinshelves.php
+// @include *localhost:*/campground.php*
+// @include *localhost:*/main.php
 // @grant	GM_log
+// @grant 	GM_getValue
+// @grant 	GM_setValue
+// @grant	GM_xmlhttpRequest
+// @history 3.11 updates for new giant castle, suspicious guy's psych jar
 // @history 3.10 refactor the actual addition of spoiler text to eliminate code duplication; add campground spoilers.
 // @history 3.09 updated for new level-9 quest stuff, bugbears/zombies, skeleton usage, etc.
 // @history 3.08 updated include list for new choice URL standard, added clan VIP swimming pool
@@ -373,7 +377,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 
 		//The Penultimate Fantasy Airship
 		"178":["Hammering the Armory","get bronze breastplate","nothing (no adv loss)"],
-		"182":["Random Lack of an Encounter","with +20 ML or more: Monster: MagiMechTech MechaMech\notherwise: Monster: (a random airship monster that is not the Mech)","Penultimate Fantasy chest","+18-39 to all stats, lose 40-50 HP"],
+		"182":["Random Lack of an Encounter","with +20 ML or more: Monster: MagiMechTech MechaMech\notherwise: Monster: (a random airship monster that is not the Mech)","Penultimate Fantasy chest","+18-39 to all stats, lose 40-50 HP","model airship (quest item for giant castle)"],
 
 		// Barrrney's Bar
 		"184":["That Explains All The Eyepatches","\nMyst class: +(1-2x Myst) offstats (max 300), +(2-3x Myst) Myst (max 400), gain 3 drunkenness \notherwise: Monster: tipsy pirate","\nMoxie class: +(1-2x Mox) offstats (max 300), +(2-3x Mox) Mox (max 400), gain 3 drunkenness \notherwise, acquire shot of rotgut","\nMuscle class: +(1-2x Mus) offstats (max 300), +(2-3x Mus) Mus (max 400), gain 3 drunkenness \notherwise, acquire shot of rotgut"],
@@ -481,40 +485,6 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"364":["","+some Mox (max 200?)","Supreme Being Glossary (advance quest state)","+some Mus (max 200?)"],
 		"365":["None Shall Pass","-30 meat, +50 Mus","-60 meat, multi-pass (advance quest state)","nothing (no adv loss??)"],
 		"392":["The Elements of Surprise...","\nCorrect order is: Sleaze/Spooky/Stench/Cold/Hot"],
-		//Krakrox
-//		"366":["Entrance","Proceed to City Center","nothing"],
-//		"367":["Ancient Temple","Proceed to Northern gate","?","\nwith memories of stone half-circle and half stone circle: unlock Ancient Temple\nwithout: nothing","Leave"],
-//		"368":["City Center","To North Side","To East Side","To West Side","","To Well","nothing"],
-//		"369":["North Side","To Northern Gate","To Ancient Tower","To City Center","nothing"],
-//		"370":["East Side","To North Abandoned Building","To City Center","To South Abandoned Building","nothing"],
-//		"371":["West Side","To Ancient Tower","To City Center","To Storehouse","nothing"],
-//		"372":["Ancient Well","To City Center","\nwithout grappling hook: nothing\nwith grappling hook: Monster: giant octopus\nafter fighting octopus: retrieve grappling hook","nothing (continue choices)","nothing"],
-//		"373":["Northern Gate",
-//			"To North Side",
-//			"do something in the catacombs",
-//			"enable northern gate lever",
-//			"\nafter manipulating Catacomb Machinery: open Ancient Temple through this gate\notherwise nothing",
-//			"proceed to Ancient Temple",
-//			"enable ?",
-//			"enable northern gate lever",
-//			"open ?",
-//			"nothing (continue choices)",
-//			"nothing (leave city)"],
-//		"374":["Ancient Tower","To North Side","To West Side","\nwith grappling hook: Monster: giant bird-creature\nfirst time after fighting bird: acquire memory of half a stone circle\nwithout: nothing (leave city)","nothing (leave city)"],
-//		"375":["Northern Abandoned Building","To East Side","\nfirst time: acquire iron key\nsubsequent: nothing","to Basement","nothing (leave city)"],
-//		"376":["Ancient Temple",
-//			"\nwithout glowing crystal: nothing\nwithout having created supervirus: Monster: ancient temple guardian\nwithout wearing cultist's robe: Monster: group of cultists\nwith all of the above: Monster: High Priest of Ki'rhuss","nothing (leave city)"],
-//		"377":["Southern abandoned building","To East Side","To Upstairs","to Basement","nothing (leave city)"],
-//		"378":["Storehouse","To West Side","\nfirst time: acquire grappling hook\nsubsequent: nothing (leave city)","nothing (leave city)"],
-//		"379":["Northern Basement","to North Abandoned Building","\nfirst time: fight giant spider\nwith iron key: acquire small stone block\notherwise: nothing (leave city)","\nacquire small stone block","nothing (leave city)"],
-//		"380":["Southern Building Upstairs","To Southern Building Downstairs","first time: Monster: giant jungle python","?","\nfirst time: acquire little stone block","nothing (leave city)"],
-//		"381":["Southern Building Basement","to Southern Building Downstairs","to Catacombs Entrance","nothing (leave city)"],
-//		"382":["Catacombs Entrance","To Southern Building Basement","To Junction","nothing (leave city)"],
-//		"383":["Catacombs Junction","To Lake","To Catacombs Entrance","To Dead-End","nothing (leave city)"],
-//		"384":["Catacombs Dead-End","To Junction","enable chest-smashing","acquire stone half-circle","nothing (leave city)"],
-//		"385":["Shore of Underground Lake","To Junction","","","before killing octopus: nothing\nafter: To Machinery","nothing (leave city)"],
-//		"386":["Catacombs Machinery","To Lake","\nwith grappling hook and with lever pulled: collapse machinery, enable opening of northern gate\notherwise nothing","nothing (leave city)"],
-	
 		
 		//marbles
 		"393":["The Collector","lose 1 of each marble, gain 32768 meat, qualify for trophy","nothing"],
@@ -657,7 +627,8 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"610":["To Catch a Killer","\nwith at least +40% combat init: complete this zone\nwithout: nothing",
 			"\nnothing"],
 		"616":["He Is the Arm, and He Sounds Like This","\nadvance quest status"],
-		"617":["Now It's Dark","\ncomplete the zone"],
+		"617":["Now It's Dark","\ncomplete the zone (receive gold wedding ring)"],
+		"618":["Cabin Fever","\nkeep zone open","\ncomplete the zone (no gold wedding ring)"],
 
 		//A-Boo Peak:
 		"611":["The Horror...","take increasing Cold & spooky damage, advance zone completion percentage",
@@ -737,7 +708,50 @@ function GetSpoilersForAdvNumber(advNumber) {
 			"\nadd Cray-Kin to available monsters",
 			"\ngain 3 crew (lose 8-10 bubbles)",
 			"\ngain 2 crayons, 8-11 bubbles",
-			"\nblock the Ferocious Roc's crew-stealing (lose 2 crayons)"]
+			"\nblock the Ferocious Roc's crew-stealing (lose 2 crayons)"],
+
+		//Chinatown tenement
+		"657":["You grind 16 rats, and Whaddya Get?",
+			"\nwith 30 gold pieces: proceed to Debasement (no adv loss)\nwithout: nothing (no adv loss",
+			"\nnothing (no adv loss)"],
+		"658":["Debasement","\nMonster: The Server","\nleave (will need to re-acquire 30 gold pieces)"],
+
+		//New giant castle
+		"669":["The Fast and the Furry-ous","proceed to Out in the Open Source","gain ~210 Moxie","?","nothing (no adv loss?)"],
+		"670":["You Don't Mess Around with Gym","\nfirst time: massive dumbbell\nafter: nothing (no adv loss)",
+			"\nGain ~200 Muscle",
+			"\nany 2 of: pec oil, Squat-Thrust Magazine, Giant Jar of Protein Powder",
+			"\nwith amulet of plot significant equipped: unlock ground floor\nwithout: nothing (no adv loss)",
+			"\nLeave (no adv loss)"],
+		"671":["Out in the Open Source",
+			"\nwith massive dumbbell: unlock ground floor\nwithout: nothing\nwith dumbbell and ground floor unlocked: snide message (no adv loss)",
+			"Gain ~200 Mysticality",
+			"O'RLY manual, open sauce",
+			"Proceed to You Don't Mess Around with Gym"],
+		"672":["There's No Ability Like Possibility","\nacquire 3 of the 12 possible class starting items",
+			"\neffect: Nothing is Impossible (30 turns of +100% spell damage)",
+			"Leave (no adv loss)"],
+		"673":["Putting Off is Off-Putting","very overdue library book","effect: Trash-wrapped (30 turns of +10 DR)","nothing (no adv loss)"],
+		"674":["Huzzah!","pewter claymore","\neffect: Pretending to Pretend (30 turns of +100% weapon damage","nothing (no adv loss)"],
+		"675":["Melon Collie and the Infinite Lameness",
+			"\nmonster: Goth Giant",
+			"\nwith drum 'n' bass 'n' drum 'n' bass record: proceed to Chore Wheel\nwith record and Chore wheel done: waste turn\nwithout: ?",
+			"3 thin black candles",
+			"Proceed to Copper Feel"],
+		"676":["Flavor of a Raver","Monster: Raver Giant","+1,000 MP, +1,000 HP",
+			"\nfirst time: drum 'n' bass 'n' drum 'n' bass record\nafter: nothing (no adv loss)",
+			"\nProceed to Yeah, You're for Me, Punk Rock Giant"],
+		"677":["Copper Feel",
+			"\nwith model airship: proceed to Chore Wheel\nwith model airship and Chore wheel done: waste turn\nwithout model airship: fight Steampunk Giant",
+			"\nfirst time:steam-powered model rocketship (opens Hole in the Sky)\nafter: nothing (no adv loss)",
+			"\nbrass gear",
+			"\nProceed to Melon Collie and the Infinite Lameness"],
+		"678":["Yeah, You're For Me, Punk Rock Giant",
+			"\nmonster: Punk Rock Giant","500-550 meat","?","Proceed to Flavor of a Raver"],
+		"679":["Keep On Turnin' the Wheel in the Sky","\ncomplete giant trash quest"],
+		"680":["Are You a Man or a Mouse?","proceed to Chore Wheel (complete giant trash quest)"]
+		
+			
 	};
 //	GM_log("in GetSpoilersForAdvNumber");
 	if (advOptions[advNumber] !== undefined) { return advOptions[advNumber]; }
