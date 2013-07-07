@@ -755,6 +755,13 @@ function GetSpoilersForAdvNumber(advNumber) {
 			"\nnothing (no adv loss)"],
 		"658":["Debasement","\nMonster: The Server","\nleave (will need to re-acquire 30 gold pieces)"],
 
+        //??
+        "689":["The Final Reward","fat loot token"],
+        "690":["The First Chest Isn't the Deepest.","item: ???","nothing (no adv loss, progress to next room)"],
+        "691":["Second Chest","item: ???","nothing (no adv loss, progress to next room)"],
+        "692":["A door","trigger trap","pass (no adv loss, 50% chance for key to break)","chance to pass (with no adv loss) or to trigger trap","pass if Mus is high enough","pass if Myst is high enough","pass if Mox is high enough","?","leave (no progress, no adv loss)"],
+        "693":["It's Almost Certainly a Trap","\nwith appropriate resistance: 1/2 of Max HP in damage, +(some) stats (based on resistance level)\nwithout: Ow.","pass (no adv loss)","leave (no adv loss)"],
+
 		//New giant castle
 		"669":["The Fast and the Furry-ous","proceed to Out in the Open Source","gain ~210 Moxie","?","nothing (no adv loss?)"],
 		"670":["You Don't Mess Around with Gym","\nfirst time: massive dumbbell\nafter: nothing (no adv loss)",
@@ -767,7 +774,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 			"Gain ~200 Mysticality",
 			"O'RLY manual, open sauce",
 			"Proceed to You Don't Mess Around with Gym"],
-		"672":["There's No Ability Like Possibility","\nacquire 3 of the 12 possible class starting items",
+		"672":["There's No Ability Like Possibility","\nacquire 3 of:\ngiant heirloom grape tomato, open sauce, pec oil, probability potion,\nstolen sushi, worthless gewgaw, worthless knick-knack, worthless trinket, Ye Olde Meade",
 			"\neffect: Nothing is Impossible (30 turns of +100% spell damage)",
 			"Leave (no adv loss)"],
 		"673":["Putting Off is Off-Putting","very overdue library book","effect: Trash-wrapped (30 turns of +10 DR)","nothing (no adv loss)"],
@@ -784,15 +791,26 @@ function GetSpoilersForAdvNumber(advNumber) {
 			"\nwith model airship: proceed to Chore Wheel\nwith model airship and Chore wheel done: waste turn\nwithout model airship: fight Steampunk Giant",
 			"\nfirst time:steam-powered model rocketship (opens Hole in the Sky)\nafter: nothing (no adv loss)",
 			"\nbrass gear",
-			"\nProceed to Melon Collie and the Infinite Lameness"],
+			"\nProceed to Melon Collie and the Infinite Lameness\n(Goth Giant/complete quest/3 thin black candles)"],
 		"678":["Yeah, You're For Me, Punk Rock Giant",
-			"\nmonster: Punk Rock Giant","500-550 meat","?","Proceed to Flavor of a Raver"],
+			"\nmonster: Punk Rock Giant","500-550 meat","Proceed to Copper Feel \n(complete quest/open HitS/fight Steampunk Giant)","Proceed to Flavor of a Raver \n(Raver Giant/+MP,HP/acquire quest item)"],
 		"679":["Keep On Turnin' the Wheel in the Sky","\ncomplete giant trash quest"],
 		"680":["Are You a Man or a Mouse?","proceed to Chore Wheel (complete giant trash quest)"],
 
+        //the sea
+        "396":["Woolly Scaly Bully","lose 200-300 HP","lose 200-300 HP","enable The Case of the Closet non-combat (sawdust)"],
+        "397":["Bored Of Education","lose 200-300 HP","enable No Rest for the Room non-combat (cancersticks)","lose 200-300 HP"],
+        "398":["A Mer-kin Graffiti","enable Raising Cane non-combat (wordquizzes)","lose 200-300 HP","lose 200-300 HP"],
+        "399":["The Case of the Closet","fight Mer-kin monitor","acquire Mer-kin sawdust"],
+        "400":["No Rest for the Room","fight Mer-kin teacher","acquire Mer-kin cancerstick"],
+        "401":["Raising Cane","fight Mer-kin punisher","\nacquire first item that you don't have from Mer-kin facecowl, mer-kin waistrope, or mer-kin wordquiz\n(acquire 3 wordquizzes if you have a mer-kin bunwig in inventory)"],
+        "402":["Picking Sides","skate blade","brand new key"],
+        "701":["Ators gonna Ate","acquire one of:\nMer-kin dodgeball, Mer-kin dragnet, Mer-kin headguard, Mer-kin switchblade, Mer-Kin thighguard, or Mer-kin fastjuice\n(cannot receive equipment that you already have)","leave"],
+        "705":["Halls Passing in the Night","fight mer-kin specter","acquire mer-kin sawdust","acquire mer-kin cancerstick","\nacquire first item that you don't have from mer-kin facecowl, mer-kin waistrope or mer-kin wordquiz\n (acquire 3 wordquizzes if you have mer-kin bunwig in inventory)"]
+
         //Degueulasse Marais
-        "696":["Stick a Fork In It":"\nOpen the Dark and Spooky Swamp","\nOpen the Wildlife Sanctuarrrrrrgh"],
-        "697":["Sophie's Choice":"\nOpen the Corpse Bog","\nOpen the Ruined Wizard Tower"],
+        "696":["Stick a Fork In It","\nOpen the Dark and Spooky Swamp","\nOpen the Wildlife Sanctuarrrrrrgh"],
+        "697":["Sophie's Choice","\nOpen the Corpse Bog","\nOpen the Ruined Wizard Tower"],
         "698":["From Bad to Worst","Open Swamp Beaver Territory","Open the Weird Swamp Village"]
 		
 			
