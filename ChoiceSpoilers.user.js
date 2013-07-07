@@ -68,7 +68,7 @@ var adventureChoiceNumber = 0, SpoilerSet, imageName;
 var n = 0, sp_list = "";
 
 if (window.location.pathname == "/main.php") {	// just logged in, do certain stuff once.
-	autoUpdate(68727,"3.10");
+	autoUpdate(68727,"3.11");
 }
 
 if (window.name == "mainpane") {
@@ -81,10 +81,11 @@ if (window.name == "mainpane") {
 			break;
 		}
 	}
-//	GM_log("found choice " + adventureChoiceNumber);
+	GM_log("found choice " + adventureChoiceNumber);
 	SpoilerSet = GetSpoilersForAdvNumber(adventureChoiceNumber);
 	if (SpoilerSet === undefined || SpoilerSet === null) {
-		//find the adventure's image.  (in some cases this will not be the first image, e.g. when you lose the Stone Wool effect when starting a Hidden Temple choice.)
+		//find the adventure's image.  (in some cases this will not be the first image,
+        //e.g. when you lose the Stone Wool effect when starting a Hidden Temple choice.)
 		var imageName = "";
 		var images = document.getElementsByTagName('img');
 		for (var foo = 0; foo < images.length; foo++) {
@@ -101,11 +102,48 @@ if (window.name == "mainpane") {
 	 }
 	 if (SpoilerSet !== undefined && SpoilerSet !== null) { 
 		for (n in SpoilerSet) { sp_list = sp_list + "(" + n + ") " + SpoilerSet[n] + ";\n"; }
-//		GM_log("found spoiler:\n " + sp_list);
+		GM_log("found spoiler:\n " + sp_list);
 		DisplaySpoilers(inputs, SpoilerSet);
-	}
+	} else {    // There's always something.  Geez.
+        GM_log("checking for buttontext-based spoilers");
+        SpoilerSet = CheckButtonText(inputs, adventureChoiceNumber);
+        if (SpoilerSet !== undefined && SpoilerSet !== null) {
+            DisplaySpoilersByButtonText(inputs, SpoilerSet);
+        }
+    }
 }
 return;
+
+function CheckButtonText(inputs, cNum)
+{
+    var advOptions = {
+        "594":{"Check Out the Mini-Fridge":"enable glasses or pill bottle","Turn on the TV":"enable glasses or comb","Take a Nap":"enable pill bottle or comb","Pick up the Glasses":"\nAfter Fridge and TV: acquire glasses","Pick up the Comb":"\nafter Nap and TV: acquire unbreakable comb","Open the Pill Bottle":"\nAfter Fridge and Nap: acquire Lost Pill Bottle","Walk Out and Back In":"keep trying","Walk Into the Room":"get started"}
+        }
+
+    GM_log("CheckButtonText!");
+
+    if (advOptions[cNum] !== undefined) return advOptions[cNum];
+    else return null;
+}
+
+function DisplaySpoilersByButtonText(inputs, SpoilerSet) {
+    var btn, bval, i, n;
+
+    GM_log("DisplaySpoilersByButtonText!");
+
+    for (n = 0; n < inputs.length; n++) {
+        btn = inputs[n];
+        GM_log("n = " + n);
+        if (btn.type === "submit") {
+            bval = btn.value;
+            i = bval.indexOf("[");
+            if (i != -1) bval = bval.substring(0, i -1);
+            GM_log("bval = {" + bval + "}");
+            btn.value += " -- " + SpoilerSet[bval];
+        }
+    }   
+}
+
 
 //all choice.php buttons have an "option=" setting in their form definition;
 //usually a number from 1-6, which corresponds to our array of spoiler text strings.
@@ -165,6 +203,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"15":["Yeti Nother Hippy","eXtreme mittens","eXtreme scarf","+200 meat"],
 		"16":["Saint Beernard","snowboarder pants","eXtreme scarf","+200 meat"],
 		"17":["Generic Teen Comedy Snowboarding Adventure","eXtreme mittens","snowboarder pants","+200 meat"],
+        "575":["Duffel on the Double","\none piece of the eXtreme outfit that you are missing\n(random piece if you have all three)","jar of frostigkraut","nothing (no adv loss)"],
 		
 		// Itznotyerzitz Mine
 		"18":["A Flat Miner","miner's pants","7-Foot Dwarven mattock","+100 meat"],
