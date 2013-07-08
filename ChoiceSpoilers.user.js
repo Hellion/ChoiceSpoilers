@@ -117,7 +117,41 @@ return;
 function CheckButtonText(inputs, cNum)
 {
     var advOptions = {
-        "594":{"Check Out the Mini-Fridge":"enable glasses or pill bottle","Turn on the TV":"enable glasses or comb","Take a Nap":"enable pill bottle or comb","Pick up the Glasses":"\nAfter Fridge and TV: acquire glasses","Pick up the Comb":"\nafter Nap and TV: acquire unbreakable comb","Open the Pill Bottle":"\nAfter Fridge and Nap: acquire Lost Pill Bottle","Walk Out and Back In":"keep trying","Walk Into the Room":"get started"}
+        "594":{"check out the mini-fridge":"enable glasses or pill bottle","turn on the tv":"enable glasses or comb","take a nap":"enable pill bottle or comb","pick up the glasses":"\nafter fridge and tv: acquire glasses","pick up the comb":"\nafter nap and tv: acquire unbreakable comb","open the pill bottle":"\nafter fridge and nap: acquire lost pill bottle","walk out and back in":"keep trying","walk into the room":"get started"},
+        "524":{"table of contents":"display chapter list","skip to your reward":"acquire skullheads's screw","quit reading":"leave"},
+        "546":{ "visit vlad's boutique":"proceed to vlad (acquire an effect (+weapon damage / +spell damage / +DR)",
+                "visit isabella's":"proceed to isabella (gain stats or meat)",
+                "visit the masquerade":"proceed to masquerade (acquire an item)",
+                "you know what? never mind.":"leave",
+                "visit the castle":"proceed to castle",
+                "stalk the night":"proceed to night",
+                "skulk in the cemetery":"proceed to cemetery",
+                "come up to the lab":"?",
+                "to the boudoir!":"??",
+                "wolf out":"\nwith hamethyst medallion: effect: there wolf (30 turns: +100% weapon damage)\nwithout: nothing",
+                "feed the undead hussies":"\nwith a bum enthralled: learn hypnosis\nwithout: nothing",
+                "go for the bum":"enthrall a bum",
+                "follow the girl":"\nwith hypnosis: effect: bat attitude (30 turns) (+100% spell damage)\nwithout hypnosis: nothing",
+                "check the mausoleum":"\nwith enthralled bum:acquire hamethyst medallion\nwithout: nothing",
+                "rob the grave":"with hypnosis: effect: mistified (30 turns) (dr +30)\nwithout: nothing",
+                "see where the night takes you":"proceed",
+                "drain her dry":"+(4x mainstat) muscle (max 500)",
+                "redirect your desire":"toward mus or mox",
+                "tell her how you feel":"toward mys or mus or meat",
+                "go party":"toward mus or mox",
+                "go to the bar":"toward mox",
+                "enjoy your vampness":"toward mys or meat",
+                "brood in solitude":"toward mus or mox",
+                "go for the jugular":"+(4x mainstat) mus (max 500)",
+                "go for first base":"toward mox",
+                "follow her, y'all":"toward mox",
+                "drink the realblud":"+(4x mainstat) mox (max 500)",
+                "listen to the cheeldren of the night":"+(4x mainstat) mys (max 500)",
+                "search for human prey":"+111 meat, -1 to 2 HP",
+                "find other prey":"+(4x mainstat) mys (max 500)",
+                "go brood in solitude":"toward mus or mox",
+                "take a walk":"toward mys or meat"
+            }
         }
 
     GM_log("CheckButtonText!");
@@ -135,7 +169,7 @@ function DisplaySpoilersByButtonText(inputs, SpoilerSet) {
         btn = inputs[n];
         GM_log("n = " + n);
         if (btn.type === "submit") {
-            bval = btn.value;
+            bval = btn.value.toLowerCase();
             i = bval.indexOf("[");
             if (i != -1) bval = bval.substring(0, i -1);
             GM_log("bval = {" + bval + "}");
@@ -292,7 +326,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"120":["Ennui is Wasted on the Young", "randomly +4-5 Mus and -2 HP \nor +7-8 Mus and Effect: Pumped Up", "\nice-cold Sir Schlitz", "\n+2-3 Mox and a lemon", "\nnothing (no adv loss)"],
 		
 		//Inside Cobb's Knob
-		"522":["Welcome To The Foot Locker","\nacquire a missing piece of the Elite Guard outfit\nor a Jelly Donut, if outfit is complete","nothing (no adv loss)"],
+		"522":["Welcome To The Footlocker","\nacquire a missing piece of the Elite Guard outfit\nor a Jelly Donut, if outfit is complete","nothing (no adv loss)"],
 		
 		// The Haunted Pantry
 		"114":["The Baker's Dilemma", "unlit birthday cake (start miniquest)", "nothing (no adv loss)", "+4-5 Mox and +16-19 meat"],
@@ -496,7 +530,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"297":["Gravy Fairy Ring","2-3 of Knob, Knoll, and/or spooky mushroom","fairy gravy boat","nothing (no adv loss)"],
 		
 		//underwater
-		"298":["In the Shade","with soggy seed packet and glob of green slime: acquire 1 sea fruit \nwithout: nothing","nothing (no adv loss?"],
+		"298":["In the Shade","with soggy seed packet and glob of green slime: acquire 2 of sea avocado, sea carrot, sea cucumber, sea honeydew, sea lychee, or sea tangelo\nwithout: nothing","nothing (no adv loss)"],
 		"299":["Down at the Hatch","first time: free Big Brother\nafterward: upgrade monsters in the Wreck for 20 turns","nothing (no adv loss)"],
 		"304":["A Vent Horizon","first 3 times: summon bubbling tempura batter","nothing (no adv loss)"],
 		"305":["There is Sauce at the Bottom of the Ocean","with Mer-kin pressureglobe, first 3 times: acquire globe of Deep Sauce\n without: nothing (no adv loss)","nothing (no adv loss)"],
@@ -583,7 +617,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"497":["SHAFT!","Monster: unearthed monstrosity","nothing"],
 		
 		// vamp out
-		"546":["Interview with You","","","","nothing (no turn loss)"],
+//		"546":["Interview with You","","","","nothing (no turn loss)"],
 		
 		// haunted sorority house
 		"548":["Necbromancer","monster: Necbromancer","nothing (no adventure loss)"],
@@ -749,11 +783,30 @@ function GetSpoilersForAdvNumber(advNumber) {
 			"\ngain 2 crayons, 8-11 bubbles",
 			"\nblock the Ferocious Roc's crew-stealing (lose 2 crayons)"],
 
+        //crackpot mystic
+        "641":["Stupid Pipes.","lose 250 HP (reduced by Hot Resist","acquire flickering pixel","leave (no adv loss?)"],
+        "642":["You're Freaking Kidding Me","\nwith at least 100 in all stats: pass\notherwise: fail","acquire flickering pixel","leave (no adv loss?"],
+        "643":["Great. A Stupid Door. What's Next?","Monster: Anger Man","nothing (no adv loss)"],
+        "644":["Snakes","\nwith 50 or more Moxie: pass\nelse: fail","acquire flickering pixel","nothing (no adv loss?)"],
+        "645":["So... Many... Skulls...","lose 250 HP (reduced by Spooky Resist","acquire flickering pixel","leave (no adv loss?)"],
+        "646":["Oh No... A Door...","Monster: Fear Man","leave (no adv loss)"],
+        "647":["A Stupid Dummy. Also, a Straw Man.","\nwith 100 or more weapon damage: pass\nelse: fail","acquire flickering pixel","leave (no adv loss?)"],
+        "648":["Slings and Arrows","\nwith 100 or more HP: pass\nelse: fail","acquire flickering pixel","leave (no adv loss)"],
+        "649":["A Door. Figures.","Monster: Doubt Man","leave (no adv loss)"],
+        "650":["This Is Your Life.  Your Horrible, Horrible Life.","\nwith 100 or more MP: pass\nelse: fail","acquire flickering pixel","leave (no adv loss)"],
+        "651":["The Wall of Wailing","with 10 (?) or more prismatic damage: pass\nelse: fail","acquire flickering pixel","leave (no adv loss)"],
+        "652":["A Door. Too Soon...","Monster: Regret Man","leave (no adv loss)"],
+
 		//Chinatown tenement
+        "654":["Courier? I don't even...","Monster: Yakuza Courier"],
+        "655":["They Have a Fight, Triangle Loses","acquire strange goggles"],
+        "656":["Wheels Within Wheels","Monster: Chief Electronic Overseer"],
 		"657":["You grind 16 rats, and Whaddya Get?",
 			"\nwith 30 gold pieces: proceed to Debasement (no adv loss)\nwithout: nothing (no adv loss",
 			"\nnothing (no adv loss)"],
 		"658":["Debasement","\nMonster: The Server","\nleave (will need to re-acquire 30 gold pieces)"],
+        //GameInform Magazine:
+        //659-665 are generated per magazine use and have no set correct answer.
 
         //??
         "689":["The Final Reward","fat loot token"],
@@ -806,8 +859,11 @@ function GetSpoilersForAdvNumber(advNumber) {
         "401":["Raising Cane","fight Mer-kin punisher","\nacquire first item that you don't have from Mer-kin facecowl, mer-kin waistrope, or mer-kin wordquiz\n(acquire 3 wordquizzes if you have a mer-kin bunwig in inventory)"],
         "402":["Picking Sides","skate blade","brand new key"],
         "701":["Ators gonna Ate","acquire one of:\nMer-kin dodgeball, Mer-kin dragnet, Mer-kin headguard, Mer-kin switchblade, Mer-Kin thighguard, or Mer-kin fastjuice\n(cannot receive equipment that you already have)","leave"],
-        "705":["Halls Passing in the Night","fight mer-kin specter","acquire mer-kin sawdust","acquire mer-kin cancerstick","\nacquire first item that you don't have from mer-kin facecowl, mer-kin waistrope or mer-kin wordquiz\n (acquire 3 wordquizzes if you have mer-kin bunwig in inventory)"]
+        "705":["Halls Passing in the Night","fight mer-kin specter","acquire mer-kin sawdust","acquire mer-kin cancerstick","\nacquire first item that you don't have from mer-kin facecowl, mer-kin waistrope or mer-kin wordquiz\n (acquire 3 wordquizzes if you have mer-kin bunwig in inventory)"],
 
+        //snow suit
+        "640":["Tailor the Snow Suit","fam attacks 80% for 3-12 (physical)","fam attacks 100% for 1-10 (cold)","\n+10% item drops, 10% chance to drop carrot (up to 3x/day)","restore 1-20 HP/combat","restore 1-10 MP/combat"],
+        
         //Degueulasse Marais
         "696":["Stick a Fork In It","\nOpen the Dark and Spooky Swamp","\nOpen the Wildlife Sanctuarrrrrrgh"],
         "697":["Sophie's Choice","\nOpen the Corpse Bog","\nOpen the Ruined Wizard Tower"],
