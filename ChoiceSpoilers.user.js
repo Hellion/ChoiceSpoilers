@@ -858,7 +858,7 @@ function GetSpoilersForAdvNumber(advNumber) {
         "399":["The Case of the Closet","fight Mer-kin monitor","acquire Mer-kin sawdust"],
         "400":["No Rest for the Room","fight Mer-kin teacher","acquire Mer-kin cancerstick"],
         "401":["Raising Cane","fight Mer-kin punisher","\nacquire first item that you don't have from Mer-kin facecowl, mer-kin waistrope, or mer-kin wordquiz\n(acquire 3 wordquizzes if you have a mer-kin bunwig in inventory)"],
-        "402":["Picking Sides","skate blade","brand new key"],
+        "403":["Picking Sides","skate blade","brand new key"],
         "701":["Ators gonna Ate","acquire one of:\nMer-kin dodgeball, Mer-kin dragnet, Mer-kin headguard, Mer-kin switchblade, Mer-Kin thighguard, or Mer-kin fastjuice\n(cannot receive equipment that you already have)","leave"],
         "705":["Halls Passing in the Night","fight mer-kin specter","acquire mer-kin sawdust","acquire mer-kin cancerstick","\nacquire first item that you don't have from mer-kin facecowl, mer-kin waistrope or mer-kin wordquiz\n (acquire 3 wordquizzes if you have mer-kin bunwig in inventory)"],
 
