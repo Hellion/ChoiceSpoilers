@@ -101,11 +101,8 @@ if (window.name == "mainpane") {
 		}
 	 }
 	 if (SpoilerSet !== undefined && SpoilerSet !== null) { 
-		for (n in SpoilerSet) { sp_list = sp_list + "(" + n + ") " + SpoilerSet[n] + ";\n"; }
-		GM_log("found spoiler:\n " + sp_list);
 		DisplaySpoilers(inputs, SpoilerSet);
 	} else {    // There's always something.  Geez.
-        GM_log("checking for buttontext-based spoilers");
         SpoilerSet = CheckButtonText(inputs, adventureChoiceNumber);
         if (SpoilerSet !== undefined && SpoilerSet !== null) {
             DisplaySpoilersByButtonText(inputs, SpoilerSet);
@@ -135,7 +132,7 @@ function CheckButtonText(inputs, cNum)
                 "check the mausoleum":"\nwith enthralled bum:acquire hamethyst medallion\nwithout: nothing",
                 "rob the grave":"with hypnosis: effect: mistified (30 turns) (dr +30)\nwithout: nothing",
                 "see where the night takes you":"get it started",
-                "head back to vlad's":"back to starting point"
+                "head back to vlad's":"back to starting point",
                 "drain her dry":"+(4x mainstat) muscle (max 500)",
                 "redirect your desire":"toward mus or mox",
                 "tell her how you feel":"toward mys or mus or meat",
@@ -152,10 +149,34 @@ function CheckButtonText(inputs, cNum)
                 "find other prey":"+(4x mainstat) mys (max 500)",
                 "go brood in solitude":"toward mus or mox",
                 "take a walk":"toward mys or meat"
+            },
+        "536":{ "down the hatch!":"To the Tavern",
+                "have a drink":"to bar (toward pills/harness)",
+                "check out the coat check":"to coat check (toward effect/EMU harness)",
+                "go to your campsite, apparently":"to campsite (toward elven items/EMU helmet)",
+                "go back to the glowy tavern":"back to start (Tavern)",
+                "try that one door":"to Sleeping quarters (distention pill/dog hair pill/back to start)",
+                "try the other door, man":"to Warehouse (HP regen effect/EMU harness/back to start)",
+                "follow captain smirk":"distention pill",
+                "follow the green girl":"synthetic dog hair pill",
+                "take the glowing door":"back to start (tavern)",
+                "cross to the cross":"effect: heal thy nanoself (10 turns: regen 10-20HP/turn)",
+                "be the duke of the hazard":"to lab (EMU harness)",
+                "down the hatch":"back to start (tavern)",
+                "enter the transporter":"E.M.U. harness",
+                "go back the way you came":"back to warehouse",
+                "exit, stage left":"to warehouse (effect/EMU harness/start)",
+                "stage right, even":"to hallway (hardtack&squeeze/EMU helmet)",
+                "back to the tavern":"back to start (tavern)",
+                "try the port door":"to closet (2 hardtack and 2 squeeze)",
+                "try the starboard door":"to lab (EMU helmet)",
+                "try the aft door":"back to start (tavern)",
+                "go through the circle":"2 elven hardtack, 2 elven squeeze)",
+                "step through the transporter":"EMU helmet",
+                "take the silver door":"to sleeping quarters (distention/dog hair/back to start)",
+                "take the purple door":"to hallway (toward EMU helmet/hardtack&squeeze)"
             }
         }
-
-    GM_log("CheckButtonText!");
 
     if (advOptions[cNum] !== undefined) return advOptions[cNum];
     else return null;
@@ -164,16 +185,12 @@ function CheckButtonText(inputs, cNum)
 function DisplaySpoilersByButtonText(inputs, SpoilerSet) {
     var btn, bval, i, n;
 
-    GM_log("DisplaySpoilersByButtonText!");
-
     for (n = 0; n < inputs.length; n++) {
         btn = inputs[n];
-        GM_log("n = " + n);
         if (btn.type === "submit") {
             bval = btn.value.toLowerCase();
             i = bval.indexOf("[");
             if (i != -1) bval = bval.substring(0, i -1);
-            GM_log("bval = {" + bval + "}");
             btn.value += " -- " + SpoilerSet[bval];
         }
     }   
@@ -186,20 +203,17 @@ function DisplaySpoilersByButtonText(inputs, SpoilerSet) {
 //Buff areas, on the other hand, have no such values and must simply be updated in order.
 function DisplaySpoilers(inputs, SpoilerSet) {
 	var cval = -1, n;
-//	GM_log("in DisplaySpoilers");
 	for (n=0; n<inputs.length;n++)	{
 		if (inputs[n].name==="option") {		// identify button!
 			cval = inputs[n].value;
 		} else if (inputs[n].type === "submit" && (cval > 0)) {	// modify button!
 			inputs[n].value += " -- " + SpoilerSet[cval] + "";
-//			GM_log("adding text "+SpoilerSet[cval]);
 		}
 	}
 	if (cval === -1) {			// got here without setting a button value? not a Choice.php button set.
 		cval = 1;			// just run through all submit text and put in our info in sequence.
 		for (n=0; n<inputs.length; n++) {
 			if (inputs[n].type === "submit") {
-//				GM_log("adding buff text " +SpoilerSet[cval]);
 				inputs[n].value += " -- " + SpoilerSet[cval++] + "";
 			}
 		}
@@ -217,7 +231,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"25":["Ouch! You bump into a door","magic lamp","Monster: mimic","nothing (no adv loss)"],
 
 		// South of the Border
-		"4":["Finger-Lickin'... Death.","+500 meat or -500 meat","-500 meat; chance of poultrygeist","nothing"],
+		"4":["Finger-Lickin'... Death.","+500 meat or -500 meat","-500 meat; chance of poultrygeist","nothing (no adv loss)"],
 
 		// Spooky Gravy Barrow
 		"5":["Heart of Very, Very Dark Darkness","without inexplicably glowing rock: proceed to choice of (lose all HP/nothing)\n with rock: proceed to choice of (Continue to Felonia/nothing)","nothing",""],
@@ -272,6 +286,17 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"41":["Smells Like Team Spirit","Dyspepsi-Cola fatigues","Cloaca-Cola helmet","+15 Mus"],
 		"42":["What is it Good For?","Dyspepsi-Cola helmet","Cloaca-Cola shield","+15 Mox"],
 
+        // Violet fog --can only spoil a few of these...
+        "62":["The Big Scary Place","Cerebral Cloche","back to the maze","back to the maze","back to the maze"],
+        "63":["The Big Scary Place","Cerebral Crossbow","back to the maze","back to the maze","back to the maze"],
+        "64":["The Big Scary Place","Cerebral Culottes","back to the maze","back to the maze","back to the maze"],
+        "65":["The Prince of Wishful Thinking","+(mainstat*3/8 to 5/9) Mus","back to the maze","back to the maze","back to the maze"],
+        "66":["The Prince of Wishful Thinking","+(mainstat*3/8 to 5/9) Mys","back to the maze","back to the maze","back to the maze"],
+        "67":["The Prince of Wishful Thinking","+(mainstat*3/8 to 5/9) Mox","back to the maze","back to the maze","back to the maze"],
+        "68":["She's So Unusual","ice stein","back to the maze","back to the maze","back to the maze"],
+        "69":["She's So Unusual","munchies pill","back to the maze","back to the maze","back to the maze"],
+        "70":["She's So Unusual","homeopathic healing powder","back to the maze","back to the maze","back to the maze"],
+        "71":["A Journey to the Center of Your Mind","\n(5 turns of 20-ML monsters","\n(5 turns of 53-ML monsters","\n5 turns of 145-ML monsters"],
 		// Whitey's Grove
 		"73":["Don't Fence Me In","+20-30 Mus","white picket fence","piece of wedding cake (always)\n also white rice (first 3 or 5 times/day)"],
 		"74":["The Only Thing About Him is the Way That He Walks","+20-30 Mox","3 boxes of wine","mullet wig"],
@@ -386,7 +411,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"154":["Doublewide","Monster: conjoined zmombie","nothing"],
 
 		// The Defiled Nook
-		"155":["Skull, Skull, Skull","+40-60 Mox","+200-300 meat","rusty bonesaw","nothing (no adv loss)"],
+		"155":["Skull, Skull, Skull","\nnormally: +40-60 Mox\nin Zombie Slayer path: acquire talkative skull\n(if you don't already have one)","+200-300 meat","rusty bonesaw","debonair deboner","nothing (no adv loss)"],
 		"156":["Pileup","Monster: giant skeelton","nothing"],
 
 		// The Defiled Niche
@@ -449,6 +474,13 @@ function GetSpoilersForAdvNumber(advNumber) {
 			 "\nwith Feelin' Philosophical, acquire not-a-pipe \nwithout, nothing",
 			 "\n+(mainstat) Myst (max 150)"],
 
+        //The Frat/Hippy Battlefield
+        "173":["The Last Stand, Man","\nMonster: The Big Wisniewski\n(use flaregun in combat for Wossname)","\nMonster: The Man \n(use flaregun in combat for Wossname)"],
+        "174":["The Last Stand, Bra","\nMonster: The Big Wisniewski\n(use flaregun in combat for ","\nMonster: The Man\n(use flaregun in combat for Wossname)"],
+
+        //Black Forest
+        "177":["The Blackberry Cobbler","acquire blackberry slippers","acquire blackberry moccasins","acquire blackberry combat boots","acquire blackberry galoshes","leave (no adv loss)\n(cobbler will not reappear for 30 turns)"],
+
 		//The Penultimate Fantasy Airship
 		"178":["Hammering the Armory","get bronze breastplate","nothing (no adv loss)"],
 		"182":["Random Lack of an Encounter","with +20 ML or more: Monster: MagiMechTech MechaMech\notherwise: Monster: (a random airship monster that is not the Mech)","Penultimate Fantasy chest","+18-39 to all stats, lose 40-50 HP","model airship (quest item for giant castle)"],
@@ -479,6 +511,8 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"206":["Getting Tired","cause Tirevalanche (multikills hot hobos)","increase size of impending Tirevalanche","nothing (no adv loss)"],
 		"207":["Hot Dog!","9000-11000 meat to your clan coffers OR a lot of hot damage","nothing (no adv loss)"],
 		"208":["Ah, So That's Where They've All Gone","decrease stench level of the Heap","nothing (no adv loss)"],
+        "211":["Despite All Your Rage","\nfree yourself","\nif a clanmate has freed you: leave cage (no adv loss)\notherwise, keep waiting"],
+        "212":["Despite All Your Rage","\nfree yourself","\nif a clanmate has freed you: leave cage (no adv loss)\notherwise, keep waiting"],
 		"213":["Piping Hot","decrease heat level of Burnbarrel Blvd","nothing (no adv loss)"],
 		"214":["You vs. The Volcano","increase stench level of the Heap","nothing (no adv loss)"],
 		"215":["Piping Cold","decrease heat level of Burnbarrel Blvd","reduce crowd size in PLD\n(makes it easier to get into the club)","increase cold level in Exposure Esplanade"],
@@ -497,12 +531,25 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"231":["The Hobo Marketplace","Proceed to choice of (food/booze/a mugging)","Proceed to choice of ((hats/pants/accessories), (combat items/muggers/entertainment), or (valuable trinkets))","Proceed to choice of buffs/tattoo/muggers/MP restore"],
 		"233":["Food Went A-Courtin'","Proceed to choice of Mus/Mys/Mox foods","Proceed to choice of Mus/Mys/Mox boozes","Monster: gang of hobo muggers"],
 		"235":["Food, Glorious Food","Proceed to buy Muscle food","Proceed to buy Mysticality food","Proceed to buy Moxie food"],
+        "237":["","eat a 5-full food (gain 60-80 adv, 200-400 Mus)","leave (no further turn loss)"],
+        "238":["","eat a 5-full food (gain 60-80 adv, 200-400 Mys)","leave (no further turn loss)"],
+        "239":["","eat a 5-full food (gain 60-80 adv, 200-400 Mox)","leave (no further turn loss)"],
 		"240":["Booze, Glorious Booze","Proceed to buy Muscle booze","Proceed to buy Mysticality booze","Proceed to buy Moxie food"],
+        "242":["","consume a 5-drunk drink (gain 40-60 adv, 500-1000 Mus)","leave (no further turn loss)"],
+        "243":["","consume a 5-drunk drink (gain 40-60 adv, 500-1000 Mys)","leave (no further turn loss)"],
+        "244":["","consume a 5-drunk drink (gain 40-60 adv, 500-1000 Mox)","leave (no further turn loss)"],
 		"245":["Math Is Hard","Proceed to choice of (hats/pants/accessories)","Proceed to choice of (combat items/muggers/entertainment)","Proceed to choice of (valuable trinkets/nothing)"],
+        "247":["","acquire 3 valuable trinkets","leave (no further turn loss)"],
 		"248":["Garment District","Proceed to choice of (fedora/tophat/wide-brimmed hat)","Proceed to choice of (leggings/dungarees/suit-pants)","Proceed to choice of (shoes/stogie/soap)"],
+        "250":["","acquire crumpled fedora","acquire battered old top hat","acquire shapeless wide-brimmed hat","leave (no further turn loss)"],
+        "251":["","acquire mostly rat-hide leggings","acquire hobo dungarees","acquire old patched suit-pants","leave (no further turn loss)"],
+        "252":["","acquire old soft shoes","acquire hobo stogie","acquire rope with some soap on it","leave (no further turn loss)"],
 		"253":["Housewares","Proceed to choice of (hubcap/caltrop/6-pack of pain)","Monster: gang of hobo muggers","Proceed to choice of (music/pets/muggers)"],
+        "255":["","acquire sharpened hubcap","acquire very large caltrop","acquire The Six-Pack of Pain","leave (no further turn loss)"],
 		"256":["Entertainment","Proceed to buy instrument","Proceed to try for a hobo monkey","Monster: gang of hobo muggers"],
+        "258":["\nacquire class-based instrument:\n SC: sealskin drum\nTT: washboard shield\nPM: spaghetti-box banjo\nS: marinara jug\nDB: makeshift castanets\nAT: left-handed melodica","leave (no further turn loss)"],
 		"259":["We'll Make Great...","hobo monkey OR +200 to each stat OR Monster: muggers","hobo monkey OR +200 to each stat OR Monster: muggers","hobo monkey OR +200 to each stat OR Monster: muggers"],
+        "261":["","acquire hobo monkey (familiar hatchling)","leave (no further turn loss)"],
 		"262":["Salud","+50% spell damage, +50 spell damage, lose 30-50MP per combat (20 turns)","Proceed to choice of (tanning/paling)","Proceed to choice of (buffs/other buffs/tattoos etc.)"],
 		"264":["Tanning Salon","+50% Moxie (20 turns)","+50% Mysticality (20 turns)"],
 		"265":["Another Part of the Market","Proceed to choice of (spooky resistance/sleaze resistance)","Proceed to choice of (stench resistance/+50% Muscle)","Proceed to choice of (tattoo/muggers/MP restore)"],
@@ -510,8 +557,20 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"268":["It's fun to stay there","Superhuman Stench resistance (20 adv)","+50% Muscle (20 adv)","nothing"],
 		"269":["Body Modifications","Proceed to choice of (tattoo/nothing)","Monster: gang of hobo muggers","refill all MP and Buff: -100% Moxie, gain MP during combat (20 adv)"],
 		"273":["The Frigid Air","frozen banquet","8000-12000 meat to your clan coffers","nothing (no adv loss)"],
-		"276":["The Gong Has Been Bung","spend 3 turns at Roachform","spend 12 turns at Mt. Molehill","Form of...Bird! (15 adv)"],
+        "275":["Triangle, Man","dinged-up triangle","leave (no further turn loss)"],
+        "291":["","jar of squeeze","nothing"],
+        "292":["","bowl of fishysoisse","nothing"],
+        "293":["","deadly lampshade","nothing"],
+        "294":["","lewd playing card","nothing"],
+        "295":["","concentrated garbage juice","nothing"],
+        "296":["","get out of now-closed instance of hobopolis"],
 
+
+        // Arrrboretum
+        "209":["Timbarrrr!","sack of Crotchety Pine saplings","sack of Saccharine Maple saplings","sack of Laughing Willow saplings"],
+        
+        // llama gong
+		"276":["The Gong Has Been Bung","spend 3 turns at Roachform","spend 12 turns at Mt. Molehill","Form of...Bird! (15 adv)"],
 		// Roachform
 		"278":["Enter the Roach","+(mainstat) Mus (max 200)\n leads to choice of Mox/Mus/MP, then to Mus/allstat/itemdrop/ML buffs", "+(mainstat) myst (max 200)\n leads to choice of Mys/Mus/MP, then to Myst/allstat/itemdrop/ML buffs","+(mainstat) Mox (max 200)\n leads to choice of Mox/Mys/MP, then to Mox/allstat/itemdrop/ML buffs"],
 		"279":["It's Nukyuhlur - the 'S' is Silent.","+(mainstat) Mox (max 200)\n leads to choice of +30% Mus/+10% all stats/+30 ML","+(mainstat) Mus (max 200)\n leads to choice of +30% Mus/+10% all stats/+50% item drops","+(mainstat) MP (max 200)\n leads to choice of +30% Mus/+50% item drops/+30 ML"],
@@ -533,12 +592,21 @@ function GetSpoilersForAdvNumber(advNumber) {
 		//underwater
 		"298":["In the Shade","\nwith soggy seed packet and glob of green slime: \nacquire 2 of sea avocado, sea carrot, sea cucumber, sea honeydew, sea lychee, or sea tangelo\nwithout: nothing","nothing (no adv loss)"],
 		"299":["Down at the Hatch","first time: free Big Brother\nafterward: upgrade monsters in the Wreck for 20 turns","nothing (no adv loss)"],
+        "302":["","acquire bubbling tempura batter, learn skill: Tempuramancy"],
+        "303":["","acquire globe of Deep Sauce, learn skill: Deep Saucery"],
 		"304":["A Vent Horizon","first 3 times: summon bubbling tempura batter","nothing (no adv loss)"],
 		"305":["There is Sauce at the Bottom of the Ocean","with Mer-kin pressureglobe, first 3 times: acquire globe of Deep Sauce\n without: nothing (no adv loss)","nothing (no adv loss)"],
+        "306":["Not a Micro Fish","learn skill: Harpoon! (if SC) or Summon Leviatuga (if TT)"],
+        "307":["Ode to the Sea","acquire item: seaode, learn skill: Salacious Cocktailcrafting"],
+        "308":["Boxing the Juke","acquire skill: Donho's Bubbly Ballad"],
 		"309":["Barback","first 3 times: acquire Seaode","nothing (no adv loss)"],
+        "310":["The Economist of Scales","rough fish scale","pristine fish scale","leave (no adv loss)"],
 		"311":["Heavily Invested in Pun Futures","Proceed to trade dull/rough fish scales","nothing (no adv loss)"],
+        "312":["Into the Outpost","\nif lockkey dropped from mer-kin burglar: possible stashbox","\nif lockkey dropped from mer-kin warrior: possible stashbox","\nif lockkey dropped from mer-kin healer: possible stashbox","nothing (no adv loss)"],
 		"403":["Picking Sides","skate blade (allows fighting ice skates)","brand new key (allows fighting roller skates)"],
 		
+        //317-345 covers a bunch of single-option turtle-taming adventures which don't really need spoiling.
+        //
 		//slimetube
 		"326":["Showdown","Monster: Mother Slime","nothing (no adv loss)"],
 		"337":["Engulfed!","\nfirst time: enable an equipment-sliming\nafterward: nothing (no adv loss)","\nfirst time (and only 5 times per tube, total): increase tube ML by 20\nafterward: nothing (no adv loss)","nothing (no adv loss)"],
@@ -837,7 +905,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 			"\nmonster: Goth Giant",
 			"\nwith drum 'n' bass 'n' drum 'n' bass record: proceed to Chore Wheel\nwith record and Chore wheel done: waste turn\nwithout: ?",
 			"3 thin black candles",
-			"Proceed to Copper Feel"],
+			"Proceed to Copper Feel\n(complete quest/open HitS/gear)"],
 		"676":["Flavor of a Raver","Monster: Raver Giant","+1,000 MP, +1,000 HP",
 			"\nfirst time: drum 'n' bass 'n' drum 'n' bass record\nafter: nothing (no adv loss)",
 			"\nProceed to Yeah, You're for Me, Punk Rock Giant"],
@@ -862,6 +930,24 @@ function GetSpoilersForAdvNumber(advNumber) {
         "701":["Ators gonna Ate","acquire one of:\nMer-kin dodgeball, Mer-kin dragnet, Mer-kin headguard, Mer-kin switchblade, Mer-Kin thighguard, or Mer-kin fastjuice\n(cannot receive equipment that you already have)","leave"],
         "705":["Halls Passing in the Night","fight mer-kin specter","acquire mer-kin sawdust","acquire mer-kin cancerstick","\nacquire first item that you don't have from mer-kin facecowl, mer-kin waistrope or mer-kin wordquiz\n (acquire 3 wordquizzes if you have mer-kin bunwig in inventory)"],
 
+        //hacienda (AT volcano island)
+        "409":["","proceed to A Short Hallway"],
+        "410":["A Short Hallway","\nto left side (kitchen/bedroom/storeroom)\ngo this way if you've seen:\npotato peeler, empty sardine can, apple core, silver pepper-mill, lid from can of sterno,\nempty teacup, small crowbar,pair of needle-nose pliers, or empty rifle cartridge","\nto right side (bedroom/library/parlour)\ngo this way if you've seen:\nlong nightcap with pom-pom on the end, dirty sock, toothbrush, or errant cube of chalk from the pool table.\n(Go this way first to maximize odds of seeing useful clues.)"],
+        "411":["Hallway Left","to Kitchen\ngo this way for: potato peeler, empty sardine can, apple core","to Dining Room\ngo this way for: silver pepper-mill, lid from a can of sterno, empty teacup","to Storeroom\ngo this way for: small crowbar, pair of needle-nose pliers, empty rifle cartridge","leave"],
+        "412":["Hallway Right","to Bedroom\ngo this way if you've seen:\nlong nightcap with a pom-pom on the end, dirty sock, or toothbrush","to Library\n(no clues point here)","to Parlour\ngo this way if you've seen:\nerrant cube of chalk from the pool table","leave"],
+        "413":["Kitchen","\nhacienda key (guaranteed if you've seen a potato peeler)\nOR fight sleepy mariachi OR silver cheese slicer","\nhacienda key (guaranteed if you've seen an empty sardine can) OR 5 taco shells OR (see a clue)","\nhacienda key (guaranteed if you've seen an apple core)\n OR fettucini Inconnu OR fight sleepy mariachi OR (see a clue)","leave"],
+        "414":["Dining Room","\nhacienda key (guaranteed if you've seen a silver pepper mill)\nOR fight alert mariachi OR silver salt-shaker","\nhacienda key (guaranteed if you've seen a lid from a can of sterno)\nOR fight a mariachi OR 3 cans of sterno OR (see a clue)","\nhacienda key (guaranteed if you've seen an empty teacup)\nOR silver pate knife","leave"],
+        "415":["Storeroom","hacienda key (guaranteed if you've seen a small crowbar)\nOR fight surprised mariachi OR fancy beef jerky OR (See a clue)","\nhacienda key (guaranteed if you've seen a pair of needle-nose pliers)\nOR fight surprised mariachi OR pipe wrench OR (see a clue)","\nhacienda key (guaranteed if you've seen an empty rifle cartridge)\nOR fight a mariachi OR gun cleaning kit","leave"],
+        "416":["Bedroom","\nhacienda key (guaranteed if you've seen a long nightcamp with a pom-pom on the end\nOR fight alert mariachi OR sleep mask","\nhacienda key (guaranteed if you've seen a dirty sock)\nOR fight a mariachi OR sock garters OR (see a clue)","\nhacienda key (guaranteed if you've seen a toothbrush)\nOR fight a mariachi OR mariachi toothpaste","\nleave"],
+        "417":["Library","\nfight surprised mariachi OR heavy leather-bound tome OR hacienda key OR (see a clue)","\nfight a mariachi OR 150-220 meat OR hacienda key OR (see a clue)","\nfight a mariachi OR leather bookmark OR hacienda key OR (see a clue)","leave (no adv loss)"],
+        "418":["Parlour","hacienda key (guaranteed if you've seen an errant cube of chalk)\nOR fight a mariachi OR ivory cue ball OR (see a clue)","\nfight mariachi OR decanter of fine Scotch OR hacienda key OR (see a clue)","\nfight mariachi OR expensive cigar OR hacienda key","leave"],
+
+        //Greatest American Pants
+        "508":["Pants-Gazing","\n5 turns of Super Skill (combat skills/spells cost 0)","\n10 turns of Super Structure (+500 DA, +5 resistance to all elements)","\n20 turns of Super Vision (+20% item drop)","\n20 turns of Super Speed (+100% Moxie)","\n10 turns of Super Accuracy (+30% chance of critical hit)","nothing (no charge expended)"],
+
+        //puzzle box
+        "525":["","nothing","nothing","nothing","nothing","nothing","nothing","exit"],
+
         //snow suit
         "640":["Tailor the Snow Suit","fam attacks 80% for 3-12 (physical)","fam attacks 100% for 1-10 (cold)","\n+10% item drops, 10% chance to drop carrot (up to 3x/day)","restore 1-20 HP/combat","restore 1-10 MP/combat"],
         
@@ -872,7 +958,6 @@ function GetSpoilersForAdvNumber(advNumber) {
 		
 			
 	};
-//	GM_log("in GetSpoilersForAdvNumber");
 	if (advOptions[advNumber] !== undefined) { return advOptions[advNumber]; }
 	else { return null; }
 }
@@ -936,7 +1021,6 @@ function GetSpoilersForImageName(advNumber, imageName) {
 				"to Keycard"]
 		}
 	};
-//	GM_log("in GetSpoilersForImageName");
 	if ((advOptions[advNumber] !== undefined) && (advOptions[advNumber][imageName] !== undefined)) {
 		 return advOptions[advNumber][imageName]; 
 	}
@@ -944,7 +1028,6 @@ function GetSpoilersForImageName(advNumber, imageName) {
 }
 
 function GetSpoilersForBodyText(advNumber, URL, imageName, bodyText) {
-//	GM_log("GSforBodyTextparams: adv=" + advNumber + ", URL="+URL+", imageName="+imageName);
 	//data format:
 	// advOption[adventureNumber][Url-or-imagename][sequencenumber] = array of strings.
 	//array element 0 = required ID text (can be any part of HTML); 1-n = spoiler text.
@@ -1074,50 +1157,57 @@ function GetSpoilersForBodyText(advNumber, URL, imageName, bodyText) {
 		    "See what's in the NS tower"
 		]
 	}
-    },
-    "536": {
-            "0": [
-                "You walk behind the bar",
-                "To Tavern",
-                "To Sleeping Quarters (food/drink pills)",
-                "To Warehouse (HP regen effect or EMU harness)"
-            ],
-            "1": [
-                "You step through the door",
-                "distention pill (food)",
-                "synthetic dog hair pill (drink)",
-                "To Tavern"
-            ],
-            "2": [
-                "You walk through the door and into what appears to be some kind of laboratory",
-                "EMU Harness"
-            ],
-            "3": [
-                "You open the door and walk into a dark room",
-                "2 elven hardtack+2 elven squeeze"
-            ],
-            "4": [
-                "You step from the clean, bright hallway",
-                "EMU helmet"
-            ]
     }
+// moved this one to ButtonText-based spoilage.
+//    "536": {
+//            "0": [
+//                "You walk behind the bar",
+//                "To Tavern",
+//                "To Sleeping Quarters (food/drink pills)",
+//                "To Warehouse (HP regen effect or EMU harness)"
+//            ],
+//            "1": [
+//                "You step through the door",
+//                "distention pill (food)",
+//                "synthetic dog hair pill (drink)",
+//                "To Tavern"
+//            ],
+//            "2": [
+//                "You walk through the door and into what appears to be some kind of laboratory",
+//                "EMU Harness"
+//            ],
+//            "3": [
+//                "You open the door and walk into a dark room",
+//                "2 elven hardtack+2 elven squeeze"
+//            ],
+//            "4": [
+//                "You step from the clean, bright hallway",
+//                "EMU helmet"
+//            ],
+//            "5": [
+//                "There's a flash of green light,",
+//                "Toward (distention pill / dog hair pill) OR effect OR E.M.U. Harness",
+//                "Toward effect OR E.M.U. harness",
+//                "To choice of colored doors (toward EMU helmet)"
+//            ],
+//            "6": [
+//                "You walk through the door, and since",
+//                "Effect: Heal thy Nanoself",
+//                "To E.M.U. harness",
+//                "back to entry"
+//            ]
+//    }
 };
-//	GM_log("in GetSpoilersForBodyText");
-//	GM_log("bodyText = " + bodyText);
 	if (advNumber === 0) {
 		for (i in advOptions[0][URL]) {
-//			GM_log("i="+i+"; checking for text:" +advOptions[0][URL][i][0]);
 			if (bodyText.indexOf(advOptions[0][URL][i][0]) !== -1) {
-//				GM_log("found text "+advOptions[0][URL][i][0]);
 				return advOptions[0][URL][i];
 			}
 		}
 		return null;
 	} else {
 		for (i in advOptions[advNumber]) {
-//			GM_log("i="+i+"; checking for text: "+advOptions[0][imageName][i][0]);
 			if (bodyText.indexOf(advOptions[advNumber][i][0]) !== -1) {
-//				GM_log("found text "+advOptions[advNumber][i][0]);
 				return advOptions[advNumber][i];
 			}
 		}
