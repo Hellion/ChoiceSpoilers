@@ -7,7 +7,7 @@
 //
 // ==UserScript==
 // @name           Tard's Kol Scripts - Choice Adventure Rewards
-// @version        3.11
+// @version        3.12
 // @namespace      http://kol.dashida.com
 // @author	   Tard
 // @author         Hellion
@@ -49,6 +49,7 @@
 // @grant 	GM_getValue
 // @grant 	GM_setValue
 // @grant	GM_xmlhttpRequest
+// @history 3.12 updates for AT nemesis, Vamping Out, more hobopolis stuff, parts of Violet fog, sea stuff
 // @history 3.11 updates for new giant castle, suspicious guy's psych jar
 // @history 3.10 refactor the actual addition of spoiler text to eliminate code duplication; add campground spoilers.
 // @history 3.09 updated for new level-9 quest stuff, bugbears/zombies, skeleton usage, etc.
