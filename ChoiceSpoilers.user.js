@@ -7,7 +7,7 @@
 //
 // ==UserScript==
 // @name           Tard's Kol Scripts - Choice Adventure Rewards
-// @version        3.13
+// @version        3.14
 // @namespace      http://kol.dashida.com
 // @author	   Tard
 // @author         Hellion
@@ -50,6 +50,7 @@
 // @grant 	GM_setValue
 // @grant	GM_xmlhttpRequest
 // @grant   GM_registerMenuCommand
+// @history 3.14 Dreadsylvania corrections, fix to Updater
 // @history 3.13 updates for Dreadsylvania
 // @history 3.12 updates for AT nemesis, Vamping Out, more hobopolis stuff, parts of Violet fog, sea stuff
 // @history 3.11 updates for new giant castle, suspicious guy's psych jar
@@ -319,7 +320,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"85":["woodstand","+(mainstat) Mox (max 200)","Spookyraven ballroom key \n(only after choosing top drawer; one time drop)","Monster: remains of a jilted mistress"],
 
 		// The Haunted Gallery
-		"89":["Out in the Garden","\nwithout tattered wolf standard: Monster: Knight (wolf)\nwith tattered wolf standard and SC class: Gain Snarl of the Timberwolf skill (one time)","without tattered snake standard: Monster: Knight (snake)\nwith tattered snake standard and TT class: gain Spectral Snapper skill (one time)","without Dreams and Lights effect: Effect: Dreams and Lights;\nwith Dreams and Lights effect: lose 24-30 HP"],
+		"89":["Out in the Garden","\nwithout tattered wolf standard: Monster: Knight (wolf)\nwith tattered wolf standard and SC class: Gain Snarl of the Timberwolf skill (one time)","without tattered snake standard: Monster: Knight (snake)\nwith tattered snake standard and TT class: gain Spectral Snapper skill (one time)","without Dreams and Lights effect: Effect: Dreams and Lights;\nwith Dreams and Lights effect: lose 24-30 HP","leave (no adv loss)\n(banishes this choice for 10 turns)"],
 
 		// The Haunted Library (Take A Look, It's In A Book")
 		"80":["Rise of the House","\nproceed to choice of nothing/nothing/nothing","\nLearn a random cooking recipe","\nProceed to choice of Mox/Mys/Skill for Myst classes","nothing (no adv loss)"],
@@ -880,8 +881,8 @@ function GetSpoilersForAdvNumber(advNumber) {
 
         //??
         "689":["The Final Reward","fat loot token"],
-        "690":["The First Chest Isn't the Deepest.","item: ???","nothing (no adv loss, progress to next room)"],
-        "691":["Second Chest","item: ???","nothing (no adv loss, progress to next room)"],
+        "690":["The First Chest Isn't the Deepest.","item: ???","skip to room 8 (no adv loss)","nothing (no adv loss, progress to next room)"],
+        "691":["Second Chest","item: ???","skip to room 13 (no adv loss)","nothing (no adv loss, progress to next room)"],
         "692":["A door","trigger trap","pass (no adv loss, 50% chance for key to break)","chance to pass (with no adv loss) or to trigger trap","pass if Mus is high enough","pass if Myst is high enough","pass if Mox is high enough","?","leave (no progress, no adv loss)"],
         "693":["It's Almost Certainly a Trap","\nwith appropriate resistance: 1/2 of Max HP in damage, +(some) stats (based on resistance level)\nwithout: Ow.","pass (no adv loss)","leave (no adv loss)"],
 
@@ -958,46 +959,46 @@ function GetSpoilersForAdvNumber(advNumber) {
         "698":["From Bad to Worst","Open Swamp Beaver Territory","Open the Weird Swamp Village"],
 
         //Dreadsylvania
-        "721":["The Cabin in the Dreadsylvanian woods","to kitchen\n(dread tarragon/grind old dry bone/banish stench monsters)","to basement\n(kruegerrands/+spooky dmg buff/Auditor's badge/lock impression","to attic\n(musicbox parts/lower werewolves/lower vampires/gain mox)","mark on your map permanently","?","leave (no adv loss?)"],
+        "721":["The Cabin in the Dreadsylvanian woods","to kitchen\n(dread tarragon/grind old dry bone/banish stench monsters)","to basement\n(kruegerrands/+spooky dmg buff/Auditor's badge/lock impression","to attic\n(musicbox parts/lower werewolves/lower vampires/gain mox)","?","mark on your map permanently","leave (no adv loss?)"],
         "722":["The Kitchen in the woods","acquire dread tarragon","\nas muscle class with old dry bone: grind it into bone flour\notherwise: nothing (keep choosing)","banish stench monsters","leave (back to cabin)"],
         "723":["What Lies Beneath (the cabin)","5-7 Kruegerrands (1st 10 players/instance) or nothing (keep going)","effect: bored stiff (+100 spooky damage)","\nwith replica key: Auditor's Badge (only 1 badge per instance)\notherwise nothing","complicated lock impression","?","leave (back to cabin)"],
         "724":["Where It's Attic","\nas AT: acquire intricate music box parts","lower werewolves in forest","lower vampires in the castle","gain (some) moxie"],
-        "725":["The Tallest Tree in the Forest","\nAs Muscle class: to Top of the tree (shake down fruit/banish sleaze monsters/moon amber)\nelse unable to proceed","\nto fire tower (lower ghosts in village/kruegerrands/gain (some) muscle)","to base (wait for shaken fruit/acquire seed pod)","mark on your map permanently","?","leave (no adv loss)"],
+        "725":["The Tallest Tree in the Forest","\nAs Muscle class: to Top of the tree (shake down fruit/banish sleaze monsters/moon amber)\nelse unable to proceed","\nto fire tower (lower ghosts in village/kruegerrands/gain (some) muscle)","to base (wait for shaken fruit/acquire seed pod)","?","mark on your map permanently","leave (no adv loss)"],
         "726":["Top of the Tree, Ma!","\nshake down fruit to a waiting clanmate","banish sleaze monsters from forest","moon-amber (only 1 piece per instance)","leave (back to tallest tree)"],
         "727":["All Along the Watchtower","\nlower ghosts in village","7-11 Kruegerrands (1st 10 players/instance) or nothing (keep going)","gain (some) Muscle","?","??","leave (back to tallest tree)"],
-        "728":["Treebasing","\nreceive shaken fruit (when clanmate shakes it down)","Dreadsylvanian seed pod","leave (back to tallest tree)"],
-        "729":["Below the Roots","\nto Hot Coals (banish hot monsters/+hot damage buff)","\nto Heart of the Matter (banish cold monsters/gain myst/+maxHP & HPRegen buff)","\nto Once Midden Twice Shy (lower bugbears/kruegerrands)","mark on your map permanently","?","leave (no adv loss)"],
+        "728":["Treebasing","\nreceive shaken fruit (when clanmate shakes it down)","Dreadsylvanian seed pod","folder (owl)","?","?","leave (back to tallest tree)"],
+        "729":["Below the Roots","\nto Hot Coals (banish hot monsters/+hot damage buff/cool iron ingot)","\nto Heart of the Matter (banish cold monsters/gain myst/+maxHP & HPRegen buff)","\nto Once Midden Twice Shy (lower bugbears/kruegerrands)","?","mark on your map permanently","leave (no adv loss)"],
         "730":["Hot Coals","banish hot monsters from forest","effect: Dragged through the coals (+100 hot damage, 100 turns)","convert old ball and chain into cool iron ingot","leave (back to Below the Roots)"],
         "731":["The Heart of the Matter","banish cold monsters from forest","gain (some) Myst","effect: Nature's Bounty (+300 MaxHP, +0-180 HPRegen) (100 turns)","leave (back to Below the Roots)"],
         "732":["Once Midden, Twice Shy","lower bugbears in forest","5-6 Kruegerrands (1st 10 players per instance only) or nothing (keep going)","?","??","???","leave (back to Below the Roots)"],
-        "733":["Dreadsylvanian Village Square","to schoolhouse (lower ghosts in village/ghost pencil/gain myst)","to blacksmith (banish cold monsters/kruegerrands)","to gallows (banish spooky monsters from village/dreadsylvanian clockwork key)","mark on your map permanently","?","leave (no adv loss)"],
+        "733":["Dreadsylvanian Village Square","to schoolhouse (lower ghosts in village/ghost pencil/gain myst)","to blacksmith (banish cold monsters/kruegerrands)","to gallows (banish spooky monsters from village/dreadsylvanian clockwork key)","?","mark on your map permanently","leave (no adv loss)"],
         "734":["Fright School","lower ghosts in village","\nghost pencil (1st 10 players per instance only) or nothing (keep going)","gain (some) Myst","?","??","leave (back to village square)"],
         "735":["Smith, Black as Night","banish hot monsters from village","5-6 Kruegerrands","to anvil (?/?/?)","?","?","leave (back to village square)"],
         "736":["Gallows","banish spooky monsters from village","\nwait to acquire (hangman's hood/cursed ring finger ring/dreadsylvanian clockwork key)","wait here for another clanmate","drop clanmate (so they acquire item)","leave (back to village square)"],
-        "737":["The Even More Dreadful Part of Town","\nto sewers (banish stench monsters from village/effect:+stench damage)","\nto tenements (reduce skeletons in castle/banish sleaze monsters from village/gain muscle)","\nas Moxie class: to shack (kruegerrands/replica key/polished moon-amber/mechanical songbird/lengths of old fuse)\notherwise nothing (stay in this choice)","mark on your map permanently","?","Leave (no adv loss)"],
+        "737":["The Even More Dreadful Part of Town","\nto sewers (banish stench monsters from village/effect:+stench damage)","\nto tenements (reduce skeletons in castle/banish sleaze monsters from village/gain muscle)","\nas Moxie class: to shack (kruegerrands/replica key/polished moon-amber/mechanical songbird/lengths of old fuse)\notherwise nothing (stay in this choice)","?","mark on your map permanently","Leave (no adv loss)"],
         "738":["A Dreadful Smell","banish stench monsters from village","effect: Sewer-drenched (+100 stench damage) (100 turns)","?","??","???","leave (back to tenements)"],
         "739":["The Tinker's. Damn.","5-6 kruegerrands","replica key","polished moon-amber","unwound mechanical songbird","3 lengths of old fuse","leave (back to tenements)"],
         "740":["Eight,Nine, Tenement","lower skeletons in castle","banish sleaze monsters in village","gain (some) Muscle","?","??","leave (back to tenements)"],
-        "741":["The Old Duke's Estate","\nTo family plot (lower zombies/kruegerrands/effect:sleaze damage)","to servant quarters (banish hot monsters/gain mox)","to bedroom (lower werewolves in woods/eau de mort/???)","mark on your map permanently","?","leave (no adv loss)"],
+        "741":["The Old Duke's Estate","\nTo family plot (lower zombies/kruegerrands/effect:sleaze damage)","to servant quarters (banish hot monsters/gain mox)","to bedroom (lower werewolves in woods/eau de mort/???)","?","mark on your map permanently","leave (no adv loss)"],
         "742":["The Plot Thickens","lower zombies in village","5-6 Kruegerrands","\neffect: Fifty Ways to Bereave Your Lover (+100 Sleaze damage) (100 turns)","?","??","leave (back to duke's estate)"],
-        "743":["No Quarter","banish hot monsters from village","gain (some) moxie","leave (back to duke's estate)"],
-        "744":["The Master Suite","lower werewolves in forest","eau de mort","???","leave (back to duke's estate)"],
-        "745":["This hall is really great","To ballroom (lower vampires/gain moxie)","to kitchen (banish cold monsters/effect: +100 cold damage)","To dining room (dreadful roast/banish stench monsters/wax banana)","mark on your map permanently","","leave (no adv loss)"],
+        "743":["No Quarter","banish hot monsters from village","gain (some) moxie","?","??","???","leave (back to duke's estate)"],
+        "744":["The Master Suite","lower werewolves in forest","eau de mort","\nwith 10 ghost threads: make ghost shawl\notherwise nothing (keep going)","?","?","leave (back to duke's estate)"],
+        "745":["This hall is really great","To ballroom (lower vampires/gain moxie)","to kitchen (banish cold monsters/effect: +100 cold damage)","To dining room (dreadful roast/banish stench monsters/wax banana)","?","mark on your map permanently","leave (no adv loss)"],
         "746":["The Belle of the Ballroom","lower vampires in castle","gain (some) Moxie","","","","leave (back to Hall)"],
-        "747":["Cold Storage","banish cold monsters from castle","effect: Staying Frosty (+100 cold damage) (100 turns)","","","Leave (back to Hall)"],
+        "747":["Cold Storage","banish cold monsters from castle","effect: Staying Frosty (+100 cold damage) (100 turns)","?","??","???","Leave (back to Hall)"],
         "748":["Dining In (The Castle)","dreadful roast","banish stench monsters in castle","wax banana (1 per instance only)","","","Leave (back to Hall)"],
-        "749":["tower most tall","\nto lab (reduce bugbears in woods/reduce zombies in village/The Machine)","\nTo Library (reduce skeletons in castle/gain myst/recipe for moon-amber necklace)","\nTo bedroom (banish sleaze monsters from castle/krueggerands/effect:+MaxMP&MPregen)","mark on your map permanently","","leave (no adv loss)"],
+        "749":["tower most tall","\nto lab (reduce bugbears in woods/reduce zombies in village/The Machine)","\nTo Library (reduce skeletons in castle/gain myst/recipe for moon-amber necklace)","\nTo bedroom (banish sleaze monsters from castle/krueggerands/effect:+MaxMP&MPregen)","?","mark on your map permanently","leave (no adv loss)"],
         "750":["working in the lab, late one night","lower bugbears in forest","lower zombies in village","\nto The Machine (learn new skill)\n (2 clanmates required)\n (must be unlocked with Skull Capacitor)","bloody kiwitini","","leave (back to Tower)"],
         "751":["Among the Quaint and Curious Tomes","reduce skeletons in castle","gain (some) Myst","learn recipe for moon-amber necklace","","","leave (back to Tower)"],
         "752":["In the Boudoir","banish sleaze monster from castle","5-6 Krueggerands","effect: Magically Fingered (+150 MaxHP, +50 MP Regen) (100 turns)","","","leave (back to Tower)"],
-        "753":["The Dungeons","\nTo cell block (banish spooky monsters from castle/gain Musc/restore MP)","\nTo boiler room (banish hot monsters from castle/kruegerrands/gain Mus+Mys+Mox)","\nTo guardroom (agaricus/effect:spore-wreathed)","mark on your map permanently","?","leave (no adv loss)"],
+        "753":["The Dungeons","\nTo cell block (banish spooky monsters from castle/gain Musc/restore MP)","\nTo boiler room (banish hot monsters from castle/kruegerrands/gain Mus+Mys+Mox)","\nTo guardroom (agaricus/effect:spore-wreathed)","?","mark on your map permanently","leave (no adv loss)"],
         "754":["Live from Dungeon Prison","banish spooky monsters from castle","gain (some) Musc","restore (some) MP","?","??","leave (back to dungeon)"],
         "755":["The Hot Bowels","banish hot monsters from castle","5-6 krueggerands","gain (some) Mus + Mys + Mox","?","??","leave (back to dungeon)"],
         "756":["Among the Fungus","stinking agaricus","effect: spore-wreathed (reduce enemy defense by 20%) (100 turns)","?","??","???","leave (back to dungeon)"],
         "758":["End of the Path","monster: Falls-From-Sky OR Great Wolf of the Air","leave (no adv loss)"],
         "759":["You're about to fight city hall","monster: Mayor Ghost OR Zombie Homeowners Association","leave (no adv loss)"],
         "760":["Holding Court","monster: Count Drunkula OR The Unkillable Skeleton","leave (no adv loss)"],
-        "764":["The Machine","grab!","","","","Leave"],
+        "764":["The Machine","help someone get a skill","help someone get a skill","wait to get a skill","keep waiting","Leave"],
         "9998":["Staring Upwards","\nreceive blood kiwi (after clanmate shakes it down) or keep waiting for the shake","leave (back to Base of Tree)"],
         "9999":["Hello, Gallows","keep waiting","leave (back to Gallows choice)"]
 		
@@ -1327,7 +1328,7 @@ function autoUpdate (id, version){
 			userScripts.appendChild (html);
 			
 			//Get new version
-			var newVersion = userScripts.getElementById ("summary").getElementsByTagName ("b")[1].nextSibling.textContent;
+			var newVersion = userScripts.getElementById ("content").getElementsByTagName ("b")[1].nextSibling.textContent;
 			
 			//Get the name of the script
 			var name = userScripts.getElementById("details").childNodes[1].innerHTML;
