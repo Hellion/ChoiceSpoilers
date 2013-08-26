@@ -7,7 +7,7 @@
 //
 // ==UserScript==
 // @name           Tard's Kol Scripts - Choice Adventure Rewards
-// @version        3.14
+// @version        3.15
 // @namespace      http://kol.dashida.com
 // @author	   Tard
 // @author         Hellion
@@ -50,7 +50,8 @@
 // @grant 	GM_setValue
 // @grant	GM_xmlhttpRequest
 // @grant   GM_registerMenuCommand
-// @history 3.14 Dreadsylvania corrections, fix to Updater
+// @history 3.15 new Hidden City
+// @history 3.14 Dreadsylvania corrections, fix to updater
 // @history 3.13 updates for Dreadsylvania
 // @history 3.12 updates for AT nemesis, Vamping Out, more hobopolis stuff, parts of Violet fog, sea stuff
 // @history 3.11 updates for new giant castle, suspicious guy's psych jar
@@ -70,9 +71,10 @@
 var inputs = document.getElementsByTagName('input');
 var adventureChoiceNumber = 0, SpoilerSet, imageName;
 var n = 0, sp_list = "";
+var debug = false;
 
 if (window.location.pathname == "/main.php") {	// just logged in, do certain stuff once.
-	autoUpdate(68727,"3.13");
+	autoUpdate(68727,"3.15");
 }
 
 if (window.name == "mainpane") {
@@ -109,10 +111,23 @@ if (window.name == "mainpane") {
         SpoilerSet = CheckButtonText(inputs, adventureChoiceNumber);
         if (SpoilerSet !== undefined && SpoilerSet !== null) {
             DisplaySpoilersByButtonText(inputs, SpoilerSet);
+        } else {
+            if (debug) ShowButtonIDs(inputs);
         }
     }
 }
 return;
+
+function ShowButtonIDs(inputs) {
+	var cval = -1, n;
+	for (n=0; n<inputs.length;n++)	{
+		if (inputs[n].name==="option") {		// identify button!
+			cval = inputs[n].value;
+		} else if (inputs[n].type === "submit" && (cval > 0)) {	// modify button!
+			inputs[n].value += " -- buttonID = " + cval + ".";
+		}
+	}
+}
 
 function CheckButtonText(inputs, cNum)
 {
@@ -194,6 +209,7 @@ function DisplaySpoilersByButtonText(inputs, SpoilerSet) {
             bval = btn.value.toLowerCase();
             i = bval.indexOf("[");
             if (i != -1) bval = bval.substring(0, i -1);
+            if (debug && SpoilerSet[bval] === undefined) SpoilerSet[bval] = "(button #" + btn.value + ")";
             btn.value += " -- " + SpoilerSet[bval];
         }
     }   
@@ -205,11 +221,14 @@ function DisplaySpoilersByButtonText(inputs, SpoilerSet) {
 //Buff areas, on the other hand, have no such values and must simply be updated in order.
 function DisplaySpoilers(inputs, SpoilerSet) {
 	var cval = -1, n;
+	var displayText = "";
 	for (n=0; n<inputs.length;n++)	{
 		if (inputs[n].name==="option") {		// identify button!
 			cval = inputs[n].value;
 		} else if (inputs[n].type === "submit" && (cval > 0)) {	// modify button!
-			inputs[n].value += " -- " + SpoilerSet[cval] + "";
+            if (debug && SpoilerSet[cval] === undefined) displayText = "(button #" + cval + ")";
+            else if (SpoilerSet[cval] !== "") displayText = " -- " + SpoilerSet[cval];
+			inputs[n].value += displayText + ""; 
 		}
 	}
 	if (cval === -1) {			// got here without setting a button value? not a Choice.php button set.
@@ -943,12 +962,18 @@ function GetSpoilersForAdvNumber(advNumber) {
         "416":["Bedroom","\nhacienda key (guaranteed if you've seen a long nightcamp with a pom-pom on the end\nOR fight alert mariachi OR sleep mask","\nhacienda key (guaranteed if you've seen a dirty sock)\nOR fight a mariachi OR sock garters OR (see a clue)","\nhacienda key (guaranteed if you've seen a toothbrush)\nOR fight a mariachi OR mariachi toothpaste","\nleave"],
         "417":["Library","\nfight surprised mariachi OR heavy leather-bound tome OR hacienda key OR (see a clue)","\nfight a mariachi OR 150-220 meat OR hacienda key OR (see a clue)","\nfight a mariachi OR leather bookmark OR hacienda key OR (see a clue)","leave (no adv loss)"],
         "418":["Parlour","hacienda key (guaranteed if you've seen an errant cube of chalk)\nOR fight a mariachi OR ivory cue ball OR (see a clue)","\nfight mariachi OR decanter of fine Scotch OR hacienda key OR (see a clue)","\nfight mariachi OR expensive cigar OR hacienda key","leave"],
+        "440":["Puttin' on the Wax","record an album","leave (no adv loss)"],
 
         //Greatest American Pants
         "508":["Pants-Gazing","\n5 turns of Super Skill (combat skills/spells cost 0)","\n10 turns of Super Structure (+500 DA, +5 resistance to all elements)","\n20 turns of Super Vision (+20% item drop)","\n20 turns of Super Speed (+100% Moxie)","\n10 turns of Super Accuracy (+30% chance of critical hit)","nothing (no charge expended)"],
 
+        //SSPD tattoos
+        "521":["A Wicked Buzz","increase SSPD tattoo completion"],
         //puzzle box
         "525":["","nothing","nothing","nothing","nothing","nothing","nothing","exit"],
+
+        //clan VIP pool
+        "585":["Screwing Around!",""],
 
         //snow suit
         "640":["Tailor the Snow Suit","fam attacks 80% for 3-12 (physical)","fam attacks 100% for 1-10 (cold)","\n+10% item drops, 10% chance to drop carrot (up to 3x/day)","restore 1-20 HP/combat","restore 1-10 MP/combat"],
@@ -958,6 +983,12 @@ function GetSpoilersForAdvNumber(advNumber) {
         "697":["Sophie's Choice","\nOpen the Corpse Bog","\nOpen the Ruined Wizard Tower"],
         "698":["From Bad to Worst","Open Swamp Beaver Territory","Open the Weird Swamp Village"],
 
+        //KOLHS
+        "700":["Delirium in the Cafeterium","\nwith Jamming with the Jocks intrinsic: gain (10-30?) Mus, Mys, and Mox\nwithout: lose (5-20?) HP","\nwith Nerd is the Word intrinsic: gain (10-30?) Mus, Mys, and Mox\nwithout: lose (5-20?) HP","with Greaser Lightnin' intrinsic: gain (10-30?) Mus, Mys, and Mox\nwithout: lose (5-20?) HP"],
+        "772":["Saved by the Bell","effect: School Spirited","effect: Poetically Licensed","Yearbook Club Camera, monster photo assignment","effect: Cut But Not Dried","effect: Isskay like an Ashtray","craft items with drops from Chemistry class","craft items with drops from Art Class","craft items with drops from Shop Class","Leave (no adv loss)"],
+
+        //Friar
+        "720":["The Florist Friar","","","","","","","","","",""],
         //Dreadsylvania
         "721":["The Cabin in the Dreadsylvanian woods","to kitchen\n(dread tarragon/grind old dry bone/banish stench monsters)","to basement\n(kruegerrands/+spooky dmg buff/Auditor's badge/lock impression","to attic\n(musicbox parts/lower werewolves/lower vampires/gain mox)","?","mark on your map permanently","leave (no adv loss?)"],
         "722":["The Kitchen in the woods","acquire dread tarragon","\nas muscle class with old dry bone: grind it into bone flour\notherwise: nothing (keep choosing)","banish stench monsters","leave (back to cabin)"],
@@ -998,9 +1029,33 @@ function GetSpoilersForAdvNumber(advNumber) {
         "758":["End of the Path","monster: Falls-From-Sky OR Great Wolf of the Air","leave (no adv loss)"],
         "759":["You're about to fight city hall","monster: Mayor Ghost OR Zombie Homeowners Association","leave (no adv loss)"],
         "760":["Holding Court","monster: Count Drunkula OR The Unkillable Skeleton","leave (no adv loss)"],
+        "761":["Staring Upwards...","\nreceive blood kiwi (after clanmate shakes it down) or keep waiting for the shake","leave (back to Base of Tree)"],
+        "762":["Try New Extra-Strength Anvil","cooling iron helmet","cooling iron breastplate","cooling iron greaves","4","5","leave (no adv loss?)"],
         "764":["The Machine","help someone get a skill","help someone get a skill","wait to get a skill","keep waiting","Leave"],
-        "9998":["Staring Upwards","\nreceive blood kiwi (after clanmate shakes it down) or keep waiting for the shake","leave (back to Base of Tree)"],
-        "9999":["Hello, Gallows","keep waiting","leave (back to Gallows choice)"]
+        "765":["Hello, Gallows","keep waiting","leave (back to Gallows choice)"],
+        "771":["It Was All a Horrible, Horrible Dream","leave (no adv loss?)"],
+
+        //Mini-Adventurer
+        "768":["The Littlest Identity Crisis","\nL1: does physical damage\nL5:volleyball\nL10: does cold damage\nL15: removes debuffs","\nL1: volleyball\nL5: starfish\nL10: does physical damage, delevels\nL15: does spooky damage","\nL1:Potato (block attacks)\nL5: Ghuol Whelp\nL10: Leprechaun\nL15: does prismatic damage","\nL1: Leprechaun\nL5: does Hot/Cold damage\nL10: cold-aligned starfish\nL15: gives buffs at start of combat","\nL1:Delevels\nL5: fairy\nL10: steals HP\nL15: Does physical deleveling attacks","L1: gives buffs at start of combat\nL5: ghuol whelp\n:10: fairy\nL15: sombrero"],
+
+        //tonic djinn
+        "778":["If You Could Only See","(some) meat","(some) Mus","(some) Mys","(some) Mox","5","nothing (tonic djinn not consumed)"],
+
+        //new hidden temple
+        "780":["Action Elevator","\nwith Thrice-Cursed effect: monster: ancient protector spirit\nelse nothing (no adv loss)","increase your cursedness","\nbanish pygmy witch lawyers from office building","4","5","leave (no adv loss)"],
+        "781":["Earthbound and down","open Hidden Apartment Building","receive stone triangle","3","4","5","leave (no adv loss)"],
+        "783":["Water You Dune","open Hidden Hospital","receive stone triangle","3","4","5","leave (no adv loss)"],
+        "784":["You, M.D.","monster: ancient protector spirit","2","3","4","5","leave (no adv loss)"],
+        "785":["Air Apparent","open Hidden Office Building","receive stone triangle","3","4","5","leave (no adv loss)"],
+        "786":["Working Holiday","\nwith complete McClusky file:monster: ancient protector spirit\nelse nothing","get paperclip to complete McClusky file","monster: pygmy witch accountant","4","5","leave (no adv loss)"],
+        "787":["Fire When Ready","open Hidden Bowling Alley","receive stone triangle","3","4","5","leave (no adv loss)"],
+        "788":["Life is Like A Cherry of Bowls","\n1st 4 times: progress\n5th time: monster: ancient protector spirit","2","3","4","5","leave (no adv loss)"],
+
+        "789":["Where Does the Loan Ranger Take His Garbagester?","\nacquire 2 Hidden City monster-drop items","banish pygmy janitors","3","4","5","leave (no adv loss)"],
+//        from: tongue depressor, bowling ball, short-handled mop,\nsurgical apron,pill cup, surgical mask,\bloodied surgical dungarees,colorful toad,pygmy briefs,\gold B.A. token, half-size scalpel, bone abacus, head mirror",
+
+        "791":["Legend of the Temple in the Hidden City","\nwith 4 triangular pieces: fight boss\nwithout: nothing (no adv loss)","2","3","4","5","leave (no adv loss)"]
+
 		
 			
 	};
