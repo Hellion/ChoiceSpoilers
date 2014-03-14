@@ -71,7 +71,7 @@
 var inputs = document.getElementsByTagName('input');
 var adventureChoiceNumber = 0, SpoilerSet, imageName;
 var n = 0, sp_list = "";
-var debug = false;
+var debug = true;
 
 if (window.location.pathname == "/main.php") {	// just logged in, do certain stuff once.
 	autoUpdate(68727,"3.15");
@@ -194,6 +194,15 @@ function CheckButtonText(inputs, cNum)
                 "take the silver door":"to sleeping quarters (distention/dog hair/back to start)",
                 "take the purple door":"to hallway (toward EMU helmet/hardtack&squeeze)"
 
+            },
+        "699":{ '"that was the last of it."':"get your reward",
+                '"Not yet, sorry."':"come back later",
+                '"i already gave it all to you."':"get your reward",
+                'pick the sword':'hand-carved bokken\n(Muscle +5%, Weapon damage +15, +5% chance of critical hit)',
+                'pick the bow':'hand-carved bow\n(Moxie +10%, Ranged Damage +10, Combat Initiative +20%)',
+                'pick the staff':'hand-carved staff\n(Mysticality +10%, Spell Damage +10, Slight Resistance to All Elements (+1))',
+                '"um..."':"come back later"
+
             }
         }
     if (advOptions[cNum] !== undefined) return advOptions[cNum];
@@ -279,6 +288,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"18":["A Flat Miner","miner's pants","7-Foot Dwarven mattock","+100 meat"],
 		"19":["100% Legal","miner's helmet","miner's pants","+100 meat"],
 		"20":["See You Next Fall","miner's helmet","7-Foot Dwarven mattock","+100 meat"],
+        "556":["More Locker Than Morlock","\na piece of mining outfit that you don't already have","nothing (no adv loss)"],
 
 		// Pirate's Cove
 		"22":["The Arrrbitrator","eyepatch","swashbuckling pants","+100 meat"],
@@ -335,7 +345,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		// The Haunted Bedroom
 		"82":["nightstand","old leather wallet","+(mainstat) Mus (max 200)","Monster: animated nightstand"],
 		"83":["darkstand","old coin purse","Monster: animated nightstand","\ntattered wolf standard (SC)\ntattered snake standard (TT)\nEnglish to A. F. U. E. Dictionary (PM or S)\nbizarre illegible sheet music (DB or AT)\n All can only be found with Lord Spookyraven's spectacles equipped\n(all are one time drops)"],
-		"84":["carvestand","400-600 meat","+(mainstat) Mys (max 200)","Lord Spookyraven's spectacles (one time drop)"],
+		"84":["carvestand","400-600 meat","+(mainstat) Mys (max 200)","\nLord Spookyraven's spectacles (one time drop)","\ndisposable instant camera"],
 		"85":["woodstand","+(mainstat) Mox (max 200)","Spookyraven ballroom key \n(only after choosing top drawer; one time drop)","Monster: remains of a jilted mistress"],
 
 		// The Haunted Gallery
@@ -352,6 +362,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		// The Haunted Ballroom
 		"90":["Curtains","\nwith bizarre illegible sheet music as DB: unlock Tango of Terror\nwith sheet music as AT: unlock Dirge of Dreadfulness\notherwise: Monster: Ghastly Organist","+(mainstat) Mox (max 150)","nothing (no adventure loss)"],
 		//91-105 are the Louvre... can't really label those.
+        "91":["Louvre It or Leave It","enter maze","leave (no adv loss)"],
 		"106":["Strung-Up Quartet","+5 ML","+5% Noncombat","+5% item drops","turn song off"],
 
 		// The Haunted Bathroom
@@ -391,6 +402,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"127":["No sir, away!","3 papayas","\nwith at least 3 papayas: +(mainstat) all stats (max 300), lose 3 papayas \nwithout: lose 60-68 HP","+(mainstat) all stats (max 100)"],
 		"129":["Do Geese See God?","get photograph of God","nothing (no adv loss?)"],
 		"130":["Rod Nevada, Vendor","get hard rock candy","nothing (no adv loss?)"],
+		"873":["Rod Nevada, Vendor","get photo of red nugget","nothing (no adv loss?)"],
 		"131":["Dr. Awkward","Monster: Dr. Awkward","Monster: Dr. Awkward","Monster: Dr. Awkward"],
 		"180":["A Pre-War Dresser Drawer, Pa!","with Torso Awaregness: Ye Olde Navy Fleece \nwithout: +200-300 meat","nothing (no adv loss)"],
 
@@ -413,7 +425,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"72":["Lording Over The Flies","trade flies for around the worlds","nothing",""],
 		"138":["Purple Hazers","Orcish cargo shorts","Orcish baseball cap","homoerotic frat-paddle"],
 		"143":["Catching Some Zetas","+50 Mus","6-7 sake bombers","Monster: War Pledge"],
-		"144":["One Less Room Than In That Movie","+50 Mus","2-5 beer bombs","Monster: Frat Warrior drill sergeant"],
+		"144":["One Less Room Than In That Movie","+50 Mox","2-5 beer bombs","Monster: Frat Warrior drill sergeant"],
 		"145":["Fratacombs","+50 Mus","2 of: brain-meltingly-hot chicken wings, frat brats, \nknob ka-bobs, can of Swiller, melted Jell-o shot","nothing (put on your War Hippy Outfit, doofus!)"],
 		"146":["Fratacombs","+50 Mus","2 of: brain-meltingly-hot chicken wings, frat brats, \nknob ka-bobs, can of Swiller, melted Jell-o shot","start the war"],
 		"181":["Chieftain of the Flies","trade flies for around the worlds","nothing"],
@@ -695,6 +707,8 @@ function GetSpoilersForAdvNumber(advNumber) {
 		
 		//New tavern
 		"496":["Crate Expectations","acquire 3 base boozes","clear square (no adv loss)"],
+        "509":["Of Course!","complete quest"],
+        "510":["Those Who Came Before You","shiny ring"],
 		"511":["If it's tiny, is it still a mansion?","Monster: Baron von Ratsworth","nothing (no adv loss)"],
 		"512":["Hot and Cold Running Rats","monster: drunken rat","nothing (no adv loss)"],
 		"513":["Staring Down the Barrel","3-5 ice-cold willers","clear square (no adv loss)"],
@@ -780,7 +794,8 @@ function GetSpoilersForAdvNumber(advNumber) {
 			"\nproceed to Go Check It Out! (need at least +50% item drop (not including your familiar)",
 			"\nproceed to There's Always Music In the Air (need jar of oil (made from drops at Oil Peak)",
 			"\nproceed to To Catch a Killer (need at least +40% combat initiative)",
-			"\nnothing (no turn loss?)"],
+            "",
+			"\nnothing (no turn loss)"],
 		"607":["Room 237","\n with 4 or more levels of stench resistance: advance quest status\nwithout: nothing",
 			"\nnothing"],
 		"608":["Go Check It Out!","\nwith at least +50% item drop: advance quest status\nwithout: nothing",
@@ -834,7 +849,17 @@ function GetSpoilersForAdvNumber(advNumber) {
 			"\ngnome attacks in combat",
 			"\ngnome grants adventures like a riftlet",
 			"\ngnome delevels like a barrrnacle"],
-	
+
+        //random crap
+        "793":["Welcome to the Shore, Inc.","","","",""],
+
+        //Zombie path
+        "596":["Dawn of the D'oh",""],
+        "598":["Recruitment Jive","",""],
+        "599":["A Zombie Master's Bait","\n1 zombie per brain","\n2 zombies per brain","\n3 zombies per brain","\n6 zombies per brain","\ndone"],
+        "600":["Summon Minion","",""],
+        "601":["Summon Horde","\n11-14 zombies","done"],
+
 		//Bugbear path
 		"588":["Machines!",
 			"\n(should be set to 2)",
@@ -850,6 +875,9 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"590":["Not Alone in the Dark",
 			"\nfight Black Ops Bugbear, or nothing",
 			"\nincrease fight chance when looking for a fight",
+            "",
+            "",
+            "",
 			"\nnothing (no adv loss)"],
 		//Old Man's Bathtub
 		"637":["First Mate set 1",
@@ -900,8 +928,8 @@ function GetSpoilersForAdvNumber(advNumber) {
 
         //??
         "689":["The Final Reward","fat loot token"],
-        "690":["The First Chest Isn't the Deepest.","item: ???","skip to room 8 (no adv loss)","nothing (no adv loss, progress to next room)"],
-        "691":["Second Chest","item: ???","skip to room 13 (no adv loss)","nothing (no adv loss, progress to next room)"],
+        "690":["The First Chest Isn't the Deepest.","\nacquire one of:\n skeleton key, walrus-tusk earring,\nextra-strength strongness elixir, jug-o-magicalness,\nsuntan lotion of moxiousness, or rubber axe","skip to room 8 (no adv loss)","nothing (no adv loss, progress to next room)"],
+        "691":["Second Chest","\nacquire one of:\ncan of maces, concentrated magicalness pill,\nenchanted barbell, giant moxie weed,\nPick-o-matic Lockpicks, ring of half-assed regeneration,\n or skeleton key ring","skip to room 13 (no adv loss)","nothing (no adv loss, progress to next room)"],
         "692":["A door","trigger trap","pass (no adv loss, 50% chance for key to break)","chance to pass (with no adv loss) or to trigger trap","pass if Mus is high enough","pass if Myst is high enough","pass if Mox is high enough","?","leave (no progress, no adv loss)"],
         "693":["It's Almost Certainly a Trap","\nwith appropriate resistance: 1/2 of Max HP in damage, +(some) stats (based on resistance level)\nwithout: Ow.","pass (no adv loss)","leave (no adv loss)"],
 
@@ -910,7 +938,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 		"670":["You Don't Mess Around with Gym","\nfirst time: massive dumbbell\nafter: nothing (no adv loss)",
 			"\nGain ~200 Muscle",
 			"\nany 2 of: pec oil, Squat-Thrust Magazine, Giant Jar of Protein Powder",
-			"\nwith amulet of plot significant equipped: unlock ground floor\nwithout: nothing (no adv loss)",
+			"\nwith amulet of plot significance equipped: unlock ground floor\nwithout: nothing (no adv loss)",
 			"\nLeave (no adv loss)"],
 		"671":["Out in the Open Source",
 			"\nwith massive dumbbell: unlock ground floor\nwithout: nothing\nwith dumbbell and ground floor unlocked: snide message (no adv loss)",
@@ -985,7 +1013,7 @@ function GetSpoilersForAdvNumber(advNumber) {
 
         //KOLHS
         "700":["Delirium in the Cafeterium","\nwith Jamming with the Jocks intrinsic: gain (10-30?) Mus, Mys, and Mox\nwithout: lose (5-20?) HP","\nwith Nerd is the Word intrinsic: gain (10-30?) Mus, Mys, and Mox\nwithout: lose (5-20?) HP","with Greaser Lightnin' intrinsic: gain (10-30?) Mus, Mys, and Mox\nwithout: lose (5-20?) HP"],
-        "772":["Saved by the Bell","effect: School Spirited","effect: Poetically Licensed","Yearbook Club Camera, monster photo assignment","effect: Cut But Not Dried","effect: Isskay like an Ashtray","craft items with drops from Chemistry class","craft items with drops from Art Class","craft items with drops from Shop Class","Leave (no adv loss)"],
+        "772":["Saved by the Bell","effect: School Spirited","effect: Poetically Licensed","Yearbook Club Camera, monster photo assignment","effect: Cut But Not Dried","effect: Isskay like an Ashtray","craft items with drops from Shop class","craft items with drops from Chemistry class","craft items with drops from Art Class","(?)","Leave (no adv loss)"],
 
         //Friar
         "720":["The Florist Friar","","","","","","","","","",""],
@@ -1015,7 +1043,7 @@ function GetSpoilersForAdvNumber(advNumber) {
         "743":["No Quarter","banish hot monsters from village","gain (some) moxie","?","??","???","leave (back to duke's estate)"],
         "744":["The Master Suite","lower werewolves in forest","eau de mort","\nwith 10 ghost threads: make ghost shawl\notherwise nothing (keep going)","?","?","leave (back to duke's estate)"],
         "745":["This hall is really great","To ballroom (lower vampires/gain moxie)","to kitchen (banish cold monsters/effect: +100 cold damage)","To dining room (dreadful roast/banish stench monsters/wax banana)","?","mark on your map permanently","leave (no adv loss)"],
-        "746":["The Belle of the Ballroom","lower vampires in castle","gain (some) Moxie","","","","leave (back to Hall)"],
+        "746":["The Belle of the Ballroom","lower vampires in castle","gain (some) Moxie\nif wearing muddy skirt and Dreadsylvanian Seed Pod in inventory:\nconvert muddy skirt to weedy skirt","","","","leave (back to Hall)"],
         "747":["Cold Storage","banish cold monsters from castle","effect: Staying Frosty (+100 cold damage) (100 turns)","?","??","???","Leave (back to Hall)"],
         "748":["Dining In (The Castle)","dreadful roast","banish stench monsters in castle","wax banana (1 per instance only)","","","Leave (back to Hall)"],
         "749":["tower most tall","\nto lab (reduce bugbears in woods/reduce zombies in village/The Machine)","\nTo Library (reduce skeletons in castle/gain myst/recipe for moon-amber necklace)","\nTo bedroom (banish sleaze monsters from castle/krueggerands/effect:+MaxMP&MPregen)","?","mark on your map permanently","leave (no adv loss)"],
@@ -1031,7 +1059,7 @@ function GetSpoilersForAdvNumber(advNumber) {
         "760":["Holding Court","monster: Count Drunkula OR The Unkillable Skeleton","leave (no adv loss)"],
         "761":["Staring Upwards...","\nreceive blood kiwi (after clanmate shakes it down) or keep waiting for the shake","leave (back to Base of Tree)"],
         "762":["Try New Extra-Strength Anvil","cooling iron helmet","cooling iron breastplate","cooling iron greaves","4","5","leave (no adv loss?)"],
-        "764":["The Machine","help someone get a skill","help someone get a skill","wait to get a skill","keep waiting","Leave"],
+        "764":["The Machine","help someone get a skill","help someone get a skill","wait to get a skill","get a skill","keep waiting for more clanmates","Leave (back to the Lab)"],
         "765":["Hello, Gallows","keep waiting","leave (back to Gallows choice)"],
         "771":["It Was All a Horrible, Horrible Dream","leave (no adv loss?)"],
 
@@ -1043,18 +1071,54 @@ function GetSpoilersForAdvNumber(advNumber) {
 
         //new hidden temple
         "780":["Action Elevator","\nwith Thrice-Cursed effect: monster: ancient protector spirit\nelse nothing (no adv loss)","increase your cursedness","\nbanish pygmy witch lawyers from office building","4","5","leave (no adv loss)"],
-        "781":["Earthbound and down","open Hidden Apartment Building","receive stone triangle","3","4","5","leave (no adv loss)"],
-        "783":["Water You Dune","open Hidden Hospital","receive stone triangle","3","4","5","leave (no adv loss)"],
+        "781":["Earthbound and down","open Hidden Apartment Building","receive stone triangle","\neffect: Blessing of Bulbazinilli (+10 DR) (20 turns)","4","5","leave (no adv loss)"],
+        "783":["Water You Dune","open Hidden Hospital","receive stone triangle","\neffect: Blessing of Squirtlcthulli (restore 8-10 HP and MP) (20 turns)","4","5","leave (no adv loss)"],
         "784":["You, M.D.","monster: ancient protector spirit","2","3","4","5","leave (no adv loss)"],
-        "785":["Air Apparent","open Hidden Office Building","receive stone triangle","3","4","5","leave (no adv loss)"],
+        "785":["Air Apparent","open Hidden Office Building","receive stone triangle","\neffect: Blessing of Pikachulotl (+30 Init) (20 turns)","4","5","leave (no adv loss)"],
         "786":["Working Holiday","\nwith complete McClusky file:monster: ancient protector spirit\nelse nothing","get paperclip to complete McClusky file","monster: pygmy witch accountant","4","5","leave (no adv loss)"],
-        "787":["Fire When Ready","open Hidden Bowling Alley","receive stone triangle","3","4","5","leave (no adv loss)"],
+        "787":["Fire When Ready","open Hidden Bowling Alley","receive stone triangle","\neffect: Blessing of Charcoatl (+10 Hot damage, +10 Hot spell damage) (20 turns)","4","5","leave (no adv loss)"],
         "788":["Life is Like A Cherry of Bowls","\n1st 4 times: progress\n5th time: monster: ancient protector spirit","2","3","4","5","leave (no adv loss)"],
 
         "789":["Where Does the Loan Ranger Take His Garbagester?","\nacquire 2 Hidden City monster-drop items","banish pygmy janitors","3","4","5","leave (no adv loss)"],
 //        from: tongue depressor, bowling ball, short-handled mop,\nsurgical apron,pill cup, surgical mask,\bloodied surgical dungarees,colorful toad,pygmy briefs,\gold B.A. token, half-size scalpel, bone abacus, head mirror",
 
-        "791":["Legend of the Temple in the Hidden City","\nwith 4 triangular pieces: fight boss\nwithout: nothing (no adv loss)","2","3","4","5","leave (no adv loss)"]
+        "791":["Legend of the Temple in the Hidden City","\nwith 4 triangular pieces: fight boss\nwithout: nothing (no adv loss)","2","3","4","5","leave (no adv loss)"],
+        
+        //hippy landfill quest
+        "794":["Once More Unto the Junk","\nto bathtub/random junksprite fight/boss-unlock (wash)","\nto boss-unlock (TV)/clothesline pole/copper wire","\nto Junk-Bond/boss-unlock (hubcap)/cigar sign"],
+        "795":["The Bathroom of Ten Men","acquire old claw-foot bathtub\n(quest-completing item)","monster: (random junksprite)","\nafter 'bang the hubcap' and 'turn up the television' choices selected: monster: JunkSprite Boss\notherwise progress toward boss unlock"],
+        "796":["The Den of Iquity","\nafter 'bang the hubcap' and 'wash your hands' choices selected: monster: JunkSprite Boss\notherwise progress toward boss unlock","acquire old clothesline pole (quest-completing item)","acquire tangle of copper wire"],
+        "797":["Let's Workshop This a Little","acquire Junk-Bond","\nafter 'wash your hands' and 'turn up the television' choices selected: monster:JunkSprite Boss\notherwise progress toward boss unlock","acquire antique cigar sign (quest-completing item)"],
+        
+        //Grim Mask
+
+        "829":["We All Wear Masks","open The Prince's Ball","open Skid Row","open The Candy Witch and the Relentless Child Thieves","open Rumpelstiltskin's Home for Children","open A Deserted Stretch of I-911","nothing (mask is not consumed)"],
+        "830":["Cooldown","to (+5 offense/+5 defense)","to (+5 blows/+1 rabbit)","to (improved howling/+3 lung capacity)","leave (no adv loss?)"],
+        "831":["Your House","\nsee how your defenses hold up"],
+        "832":["Shower Power","+5 offense","+5 defense"],
+        "833":["Vendie, Vidi, Vici","+5 blows from (Hot/Cold/Spooky/'blow'","+1 rabbit"],
+        "834":["Back Room Dealings","gain Improved Howling","+3 Wolf Lung Capacity"],
+        "835":["Barely Tales","\n+20 Init (30 turns)","+20 Max HP, +10 Max MP (30 turns)","+10 Weapon Dmg, +20 Spell Dmg (30 turns)"],
+        "837":["On Purple Pond","gain intel on what next attack will have","+1 Moat","+(some) candy"],
+        "838":["General Mill","+1 Moat","\n+(250ish) candy)\n-or-\n+(1000ish) candy if whispering voice said so"],
+        "839":["The Sounds of the Undergrounds","gain intel on what next attack will have","+1 Minefield","+(250ish) candy"],
+        "840":["Hop on Rock Pops","+1 Minefield","+(250ish) candy"],
+        "841":["Building, Structure, Edifice","get hint from a whispering voice","+2 to one of Wall/Anti-Aircraft Turret/Poison Jars","+(150ish) candy"],
+        "842":["The Gingerbread Warehouse","+1 Wall Strength","+1 Poison Jar","+1 Anti-Aircraft Turret","+(150ish) candy"],
+
+        //Avatar of Pete
+        "855":["Behind the 'Stache","\nblock environmental bullet damage \n(clears fire and ice conditions)","\nenable priceless diamond finding \n(clears no-bullet and fire conditions)","\nenable unnamed cocktail->flamin' whathisname conversion \n(clears diamond and no-bullet conditions","\nacquire 4-5 of: \nblowdart, drum of tommy ammo, shuriken salad, throwing fork, throwing knife, throwing spoon, unnamed cocktail"],
+        "856":["This Looks Like a Good Both for an Ambush","drive off 3 protesters (more with more lynyrd-ness, up to 21 total)","leave (no adv loss)"],
+        "857":["Bench Warrant","drive off 3 protesters (bonus sleaze damage increases progress)","leave (no adv loss)"],
+        "858":["Fire Up Above","drive off 3 protesters (10 with a Flamin' Whatshisname from Copperhead Club)","leave (no adv loss)"],
+        
+
+//        "859":["Upping Your Grade","\nto choice of more peel-outs / more-damaging wheelies / free access to the Peak","\nto choice of desert beach access / island access / +50 init","\nto choice of yellow ray / prismatic damage / desert exploration boost","\nto choice of (?bonus vs undead) / (?bike attacks) / +5 stats per combat","\nto choice of +Combat / +NonCombat / monster banisher","to choice of HP+MP Regen / +(?) meat drop / -30 ML"],
+        "866":["Methinks the Protesters Doth Protest Too Little","to Ambush (use lynyrdness to clear protesters)","to Bench (use sleaze damage to clear protesters)","to Fire Up Above (use flamin' whatshisnames to clear protesters)"],
+        "871":["(nothing)"]
+
+
+
 
 		
 			
@@ -1212,7 +1276,7 @@ function GetSpoilersForBodyText(advNumber, URL, imageName, bodyText) {
         "/palinshelves.php": {
             "0": [
                 "Drawn Onward",
-                "\nwith photo of God, hard rock candy, ketchup hound and ostrich ",
+                "\nwith photo of God, hard rock candy, ketchup hound and ostrich egg: progress\nelse nothing",
                 "nothing (no adv loss)"
             ]
         },
